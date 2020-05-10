@@ -20,4 +20,5 @@ Route::post('nanikiru','NanikiruController@index');
 Route::get('result','NanikiruController@result');
 Route::post('result','NanikiruController@result');
 Route::get('description','NanikiruController@description');
+Route::get('test','TestController@index');
 
