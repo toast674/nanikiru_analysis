@@ -50,13 +50,23 @@
                                 <?php echo $tya_array[$i]; ?>家
                                 <?php echo $junme_array[$i]; ?>巡目
                                 ドラ
-                                <img src="{{ asset("/tile_images/$dora_array[$i]") }}">
+                                @if(app('env')=='local')
+                                    <img src="{{ asset("/tile_images/$dora_array[$i]") }}">
+                                @endif
+                                @if(app('env')=='production')
+                                    <img src="{{ secure_asset("/tile_images/$dora_array[$i]") }}">
+                                @endif
                             </div>
 
                             <!-- 牌姿を作成 -->
                             <div class="paishi">
                                 @foreach($paishi_image as $pai_image)
-                                <img src="{{ asset("/tile_images/$pai_image") }}">
+                                @if(app('env')=='local')
+                                    <img src="{{ asset("/tile_images/$pai_image") }}">
+                                @endif
+                                @if(app('env')=='production')
+                                    <img src="{{ secure_asset("/tile_images/$pai_image") }}">
+                                @endif
                                 @endforeach
                                 <br>
                             </div>
@@ -75,7 +85,12 @@
                             <!-- checked required -->
                             <!-- JSにてカウント -->
                             <label for=<?php echo "question0_$qa_num"; ?>>
-                                <img src="{{ asset("/tile_images/".$answer_choice_array[$qa_num][0]) }}">
+                                @if(app('env')=='local')
+                                    <img src="{{ asset("/tile_images/".$answer_choice_array[$qa_num][0]) }}">
+                                @endif
+                                @if(app('env')=='production')
+                                    <img src="{{ secure_asset("/tile_images/".$answer_choice_array[$qa_num][0]) }}">
+                                @endif
                             </label>
 
                             <input id=<?php echo "question1_$qa_num"; ?> type="radio"
@@ -83,7 +98,12 @@
                                 value="<?php echo $answer_point_array[$qa_num][1]; ?>" onclick="sendNum();"
                                 data-question-num="<?php echo (string)$qa_num; ?>">
                             <label for=<?php echo "question1_$qa_num"; ?>>
-                                <img src="{{ asset("/tile_images/".$answer_choice_array[$qa_num][1]) }}">
+                                @if(app('env')=='local')
+                                    <img src="{{ asset("/tile_images/".$answer_choice_array[$qa_num][1]) }}">
+                                @endif
+                                @if(app('env')=='production')
+                                    <img src="{{ secure_asset("/tile_images/".$answer_choice_array[$qa_num][1]) }}">
+                                @endif
                             </label>
 
                             <input id=<?php echo "question2_$qa_num"; ?> type="radio"
@@ -91,7 +111,12 @@
                                 value="<?php echo $answer_point_array[$qa_num][2]; ?>" onclick="sendNum();"
                                 data-question-num="<?php echo (string)$qa_num; ?>">
                             <label for=<?php echo "question2_$qa_num"; ?>>
+                                @if(app('env')=='local')
                                 <img src="{{ asset("/tile_images/".$answer_choice_array[$qa_num][2]) }}">
+                                @endif
+                                @if(app('env')=='production')
+                                <img src="{{ secure_asset("/tile_images/".$answer_choice_array[$qa_num][2]) }}">
+                                @endif
                             </label>
                         </div>
                     </div>

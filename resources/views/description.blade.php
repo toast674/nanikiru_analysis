@@ -40,13 +40,23 @@
                             <?php echo $tya_array[$i]; ?>家
                             <?php echo $junme_array[$i]; ?>巡目
                             ドラ
-                            <img src="{{ asset("/tile_images/$dora_array[$i]") }}">
+                            @if(app('env')=='local')
+                                <img src="{{ asset("/tile_images/$dora_array[$i]") }}">
+                            @endif
+                            @if(app('env')=='production')
+                                <img src="{{ secure_asset("/tile_images/$dora_array[$i]") }}">
+                            @endif
                         </div>
 
                         <!-- 牌姿を作成 -->
                         <div class="paishi">
                             @foreach($paishi_image as $pai_image)
-                            <img src="{{ asset("/tile_images/$pai_image") }}">
+                            @if(app('env')=='local')
+                                <img src="{{ asset("/tile_images/$pai_image") }}">
+                            @endif
+                            @if(app('env')=='production')
+                                <img src="{{ secure_asset("/tile_images/$pai_image") }}">
+                            @endif
                             @endforeach
                             <br>
                         </div>
@@ -56,10 +66,19 @@
                     <div class="answer-area description">
                         <!-- 回答番号 -->
                         <span> A<?php echo $qa_num; ?>.&nbsp;&nbsp;</span>
+
+                        @if(app('env')=='local')
+                            <img src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][0]) }}">＞
+                            <img src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][1]) }}">＞
+                            <img src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][2]) }}">
+                        @endif
+                        @if(app('env')=='production')
                         <!-- 正解順選択肢 -->
-                        <img src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][0]) }}">＞
-                        <img src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][1]) }}">＞
-                        <img src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][2]) }}">
+                            <img src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][0]) }}">＞
+                            <img src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][1]) }}">＞
+                            <img src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][2]) }}">
+                        @endif
+
                     </div>
 
                     <!-- 解説 -->
