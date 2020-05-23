@@ -9,10 +9,18 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/card.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/media.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.notify.css') }}">
+    @if(app('env')=='local')
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/card.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/media.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.notify.css') }}">
+    @endif
+    @if(app('env')=='production')
+        <link rel="stylesheet" type="text/css" href="{{ secure_asset('css/style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ secure_asset('css/card.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ secure_asset('css/media.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ secure_asset('css/jquery.notify.css') }}">
+    @endif
 
     <style>
     </style>
