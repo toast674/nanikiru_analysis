@@ -15,9 +15,9 @@ class CreateAnswersTable extends Migration
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('question_id',8)->comment("questionテーブルのid");
+            $table->integer('question_id')->comment("questionテーブルのid");
             $table->string('choice',3)->comment("選択肢の牌");
-            $table->integer('point',1)->comment("解答ポイント");
+            $table->integer('point')->comment("解答ポイント");
             $table->timestamps();
         });
     }

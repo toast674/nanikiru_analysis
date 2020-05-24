@@ -15,7 +15,7 @@ class CreateQuestionsTable extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('question_type_id',8)->comment("問題タイプ");
+            $table->integer('question_type_id')->comment("問題タイプ");
             $table->string('question',20)->comment("問題牌姿");
             $table->string('dora',4)->comment("ドラ");
 
