@@ -79,6 +79,15 @@
                             <img src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][2]) }}">
                         @endif
 
+                        <!-- ユーザー回答 TODO選択された牌をborderなどで示すようにする -->
+                        <div class="user_answer description">
+                            @if(app('env')=='local')
+                                選んだ答え<img src="{{ asset("/tile_images/".$user_answer_img_array[$i]) }}">
+                            @endif
+                            @if(app('env')=='production')
+                                選んだ答え<img src="{{ secure_asset("/tile_images/".$user_answer_img_array[$i]) }}">＞
+                            @endif
+                        </div>
                     </div>
 
                     <!-- 解説 -->
@@ -86,11 +95,13 @@
                         <div class="description-content">
                             <p>
                                 <?php
-                                            if($description_array[$i]['description']) {
-                                            echo $description_array[$i]['description'];}
-                                            else {
-                                            echo str_repeat('HERE IS DESCRIPTION TEST.<br>', rand(1,10)); }
-                                            ?>
+                                    if($description_array[$i]['description']) {
+                                        echo $description_array[$i]['description'];
+                                    }
+                                    else {
+                                        echo str_repeat('HERE IS DESCRIPTION TEST.<br>', rand(1,10)); 
+                                    }
+                                ?>
                             </p>
                         </div>
                     </div>

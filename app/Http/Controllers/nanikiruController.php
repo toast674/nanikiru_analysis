@@ -53,6 +53,7 @@ class NanikiruController extends Controller
             $question_type_array[$type->id] = $type->description;
         }
 
+
         return view('nanikiru', compact('questions', 'answers', 'paishi_image_array',
         'answer_choice_array', 'answer_point_array', 'question_type_array', 'answer_question_type_array',
         'dora_array', 'junme_array', 'kyoku_array', 'tya_array'));
@@ -64,6 +65,8 @@ class NanikiruController extends Controller
         $all_request = $request->all();
         //不要なトークンを削除
         unset($all_request['_token']);
+
+        $request->session()->put('user_answer', $all_request);
         //結果の配列 問題タイプ毎
         $result_array = [];
         //累計得点
@@ -91,11 +94,15 @@ class NanikiruController extends Controller
     }
 
     // 解答解説画面
-    public function description() {
+    public function description(Request $request) {
         // 解答解説
         $description_array = Question::get('description');
 
+        // ユーザーが選択した回答を取得
+        $user_answer = $request->session()->get('user_answer');
+
         $questions = Question::with('answer')->get();
+
         foreach($questions as $question) {
             //問題牌姿
             $paishi_image_array[] = $this->convertPaishi($question->question);
@@ -116,7 +123,9 @@ class NanikiruController extends Controller
             $answer_choice_array[$answer->question_id][] = $this->convertPai($answer->choice);
             // 問題選択肢と解答ポイントの連想配列
             $answer_info_array[$answer->question_id][$this->convertPai($answer->choice)] = $answer->point;
+            $answer_info_question_id_point_choice[$answer->question_id][$answer->point] = $this->convertPai($answer->choice);
         }
+        $user_answer_img_array = $this->getUserAnswerImage($user_answer, $answer_info_question_id_point_choice);
 
         // 選択肢を高ポイント順にソートする
         $answer_info_sorted = [];
@@ -126,6 +135,7 @@ class NanikiruController extends Controller
             arsort($answer_info);
             $answer_info_sorted[$index] = $answer_info;
         }
+
         // 連想配列をポイント順にならべた選択肢になる普通の配列に直す
         $answer_choice_sorted = [];
 
@@ -133,7 +143,9 @@ class NanikiruController extends Controller
             $answer_choice_sorted[$index] = array_keys($answer_info);
         }
 
-        return view('description', compact('description_array', 'paishi_image_array', 'dora_array', 'junme_array', 'kyoku_array', 'tya_array', 'answer_choice_array', 'answer_info_array', 'answer_info_sorted', 'answer_choice_sorted'));
+        return view('description', compact('description_array', 'paishi_image_array', 'dora_array',
+                    'junme_array', 'kyoku_array', 'tya_array', 'answer_choice_array', 'answer_info_array', 
+                    'answer_info_sorted', 'answer_choice_sorted', 'user_answer_img_array'));
     }
 
     /**
@@ -280,5 +292,21 @@ class NanikiruController extends Controller
         } else {
             return $book[2];
         }
+    }
+
+    /**
+     * 選択した回答を画像に変換
+     * @param user_answer 何切る画面での選択した回答のvalue
+     * @return choice_array ユーザーの回答の画像パスの配列
+     */
+    private function getUserAnswerImage($user_answer, $answer_info_question_id_point_choice) :Array {
+
+        // $iは擬似的にquestion_idとして用いる
+        $i = 1;
+        foreach($user_answer as $key => $value) {
+            $choice_array[] = $answer_info_question_id_point_choice[$i][$value];
+            $i++;
+        }
+        return $choice_array;
     }
 }
