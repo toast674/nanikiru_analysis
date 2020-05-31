@@ -67,27 +67,24 @@
                         <!-- 回答番号 -->
                         <span> A<?php echo $qa_num; ?>.&nbsp;&nbsp;</span>
 
+                        <!-- ユーザー回答が一致するものにborderのためのclass付与 -->
+                        <?php $user_answer_img_array[$i] == $answer_choice_sorted[$qa_num][0] ? $class1 = 'selected' : $class1 = ''; ?>
+                        <?php $user_answer_img_array[$i] == $answer_choice_sorted[$qa_num][1] ? $class2 = 'selected' : $class2 = ''; ?>
+                        <?php $user_answer_img_array[$i] == $answer_choice_sorted[$qa_num][2] ? $class3 = 'selected' : $class3 = ''; ?>
+
                         @if(app('env')=='local')
-                            <img src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][0]) }}">＞
-                            <img src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][1]) }}">＞
-                            <img src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][2]) }}">
+                            <img class="<?php echo $class1; ?>" src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][0]) }}">＞
+                            <img class="<?php echo $class2; ?>" src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][1]) }}">＞
+                            <img class="<?php echo $class3; ?>" src="{{ asset("/tile_images/".$answer_choice_sorted[$qa_num][2]) }}">
                         @endif
                         @if(app('env')=='production')
                         <!-- 正解順選択肢 -->
-                            <img src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][0]) }}">＞
-                            <img src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][1]) }}">＞
-                            <img src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][2]) }}">
+                            <img class="<?php echo $class1; ?>" src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][0]) }}">＞
+                            <img class="<?php echo $class2; ?>" src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][1]) }}">＞
+                            <img class="<?php echo $class3; ?>" src="{{ secure_asset("/tile_images/".$answer_choice_sorted[$qa_num][2]) }}">
                         @endif
 
                         <!-- ユーザー回答 TODO選択された牌をborderなどで示すようにする -->
-                        <div class="user_answer description">
-                            @if(app('env')=='local')
-                                選んだ答え<img src="{{ asset("/tile_images/".$user_answer_img_array[$i]) }}">
-                            @endif
-                            @if(app('env')=='production')
-                                選んだ答え<img src="{{ secure_asset("/tile_images/".$user_answer_img_array[$i]) }}">＞
-                            @endif
-                        </div>
                     </div>
 
                     <!-- 解説 -->

@@ -125,6 +125,7 @@ class NanikiruController extends Controller
             $answer_info_array[$answer->question_id][$this->convertPai($answer->choice)] = $answer->point;
             $answer_info_question_id_point_choice[$answer->question_id][$answer->point] = $this->convertPai($answer->choice);
         }
+
         $user_answer_img_array = $this->getUserAnswerImage($user_answer, $answer_info_question_id_point_choice);
 
         // 選択肢を高ポイント順にソートする
@@ -143,9 +144,14 @@ class NanikiruController extends Controller
             $answer_choice_sorted[$index] = array_keys($answer_info);
         }
 
+        $class1 = '';
+        $class2 = '';
+        $class3 = '';
+
         return view('description', compact('description_array', 'paishi_image_array', 'dora_array',
                     'junme_array', 'kyoku_array', 'tya_array', 'answer_choice_array', 'answer_info_array', 
-                    'answer_info_sorted', 'answer_choice_sorted', 'user_answer_img_array'));
+                    'answer_info_sorted', 'answer_choice_sorted', 'user_answer_img_array',
+                    'class1', 'class2', 'class3' ));
     }
 
     /**
@@ -299,7 +305,7 @@ class NanikiruController extends Controller
      * @param user_answer 何切る画面での選択した回答のvalue
      * @return choice_array ユーザーの回答の画像パスの配列
      */
-    private function getUserAnswerImage($user_answer, $answer_info_question_id_point_choice) :Array {
+    private function getUserAnswerImage($user_answer, $answer_info_question_id_point_choice) {
 
         // $iは擬似的にquestion_idとして用いる
         $i = 1;
