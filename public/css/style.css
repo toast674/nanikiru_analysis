@@ -661,3 +661,7 @@ body {
     width: calc(var(--body-height)  * 0.33 * var(--book-image-aspect-ratio));
     height: calc(var(--body-height) * 0.33);
 }
+
+.selected {
+    outline: solid 4px #6C9BD2;
+}
