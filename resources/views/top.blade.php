@@ -34,7 +34,10 @@
                     </div>
                 </div>
                 <div class="action-choices">
-                    <button type="button" class="trans-btn" onclick="location.href='nanikiru'" onfocus="this.blur();"><span class="btn-shine">分析をする</span></button>
+                    <button type="button" class="trans-btn" onclick="location.href='nanikiru'" onfocus="this.blur();"><span class="btn-shine">分析する</span></button>
+                </div>
+                <div class="action-choices">
+                    <button type="button" class="trans-btn" onclick="location.href='chart'" onfocus="this.blur();"><span class="btn-shine">戦術書検索</span></button>
                 </div>
             </div>
         </div>

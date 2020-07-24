@@ -324,7 +324,7 @@
                 notify({
                     type: "error", //alert | success | error | warning | info
                     title: "Q" + remainderArray + "の問題が未回答です",
-                    message: "全てに回答をしてから押してください",
+                    message: "全ての問題に回答してください",
                     position: {
                         x: "right", //right | left | center
                         y: "bottom" //top | bottom | center
