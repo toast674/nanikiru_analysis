@@ -39,6 +39,9 @@
                 <div class="action-choices">
                     <button type="button" class="trans-btn" onclick="location.href='chart'" onfocus="this.blur();"><span class="btn-shine">戦術書検索</span></button>
                 </div>
+                <div class="action-choices">
+                    <button type="button" class="trans-btn" onclick="location.href='flash'" onfocus="this.blur();"><span class="btn-shine">フラッシュ何切る</span></button>
+                </div>
             </div>
         </div>
         @include('part.footer')

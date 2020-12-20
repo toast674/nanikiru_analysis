@@ -9,10 +9,8 @@ use App\Answer;
 use App\Book;
 use App\Requests\NanikiruRequest;
 
-//何切るコントローラー
-class NanikiruController extends Controller
-{
-    // 問題画面
+class FlashController extends Controller {
+
     public function index() {
         //全ての問牌姿
         $paishi_image_array = [];
@@ -54,7 +52,7 @@ class NanikiruController extends Controller
             $question_type_array[$type->id] = $type->description;
         }
 
-        return view('nanikiru', compact('questions', 'answers', 'paishi_image_array',
+        return view('flash', compact('questions', 'answers', 'paishi_image_array',
         'answer_choice_array', 'answer_point_array', 'question_type_array', 'answer_question_type_array',
         'dora_array', 'junme_array', 'kyoku_array', 'tya_array'));
     }
@@ -91,67 +89,6 @@ class NanikiruController extends Controller
         $result_book = $this->suggestBookAsAllScore($all_get_score);
 
         return view('result', compact('result_array', 'all_get_score', 'all_perfect_score', 'result_book'));
-    }
-
-    // 解答解説画面
-    public function description(Request $request) {
-        // 解答解説
-        $description_array = Question::get('description');
-
-        // ユーザーが選択した回答を取得
-        $user_answer = $request->session()->get('user_answer');
-
-        $questions = Question::with('answer')->get();
-
-        foreach($questions as $question) {
-            //問題牌姿
-            $paishi_image_array[] = $this->convertPaishi($question->question);
-            //問題ドラ
-            $dora_array[] = $this->convertPai($question->dora);
-            //問題巡目
-            $junme_array[] = $question->junme;
-            //問題局数
-            $kyoku_array[] = $question->kyoku;
-            //問題家
-            $tya_array[] = $question->tya;
-        }
-
-        $answers = Answer::with('question')->get();
-
-        foreach($answers as $answer) {
-            // 問題選択肢
-            $answer_choice_array[$answer->question_id][] = $this->convertPai($answer->choice);
-            // 問題選択肢と解答ポイントの連想配列
-            $answer_info_array[$answer->question_id][$this->convertPai($answer->choice)] = $answer->point;
-            $answer_info_question_id_point_choice[$answer->question_id][$answer->point] = $this->convertPai($answer->choice);
-        }
-
-        $user_answer_img_array = $this->getUserAnswerImage($user_answer, $answer_info_question_id_point_choice);
-
-        // 選択肢を高ポイント順にソートする
-        $answer_info_sorted = [];
-
-        // 選択肢を高ポイント順に並び替え
-        foreach($answer_info_array as $index => $answer_info) {
-            arsort($answer_info);
-            $answer_info_sorted[$index] = $answer_info;
-        }
-
-        // 連想配列をポイント順にならべた選択肢になる普通の配列に直す
-        $answer_choice_sorted = [];
-
-        foreach($answer_info_sorted as $index => $answer_info) {
-            $answer_choice_sorted[$index] = array_keys($answer_info);
-        }
-
-        $class1 = '';
-        $class2 = '';
-        $class3 = '';
-
-        return view('description', compact('description_array', 'paishi_image_array', 'dora_array',
-                    'junme_array', 'kyoku_array', 'tya_array', 'answer_choice_array', 'answer_info_array', 
-                    'answer_info_sorted', 'answer_choice_sorted', 'user_answer_img_array',
-                    'class1', 'class2', 'class3' ));
     }
 
     /**

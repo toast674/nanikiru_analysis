@@ -9,7 +9,6 @@ class BookChartController extends Controller
 {
     // 
     public function index() {
-
         return view('chart');
     }
 }
