@@ -29,6 +29,7 @@
 <body class="nanikiru">
     @include('part.header')
     <div class="container">
+        <button id="getFlash">スタート</button>
         <form method="POST" action="result" name="nanikiruForm">
             <div class="card-outer">
                 @csrf
@@ -50,6 +51,10 @@
                                 @endif
                                 @endforeach
                                 <br>
+                            </div>
+
+                            <div id="paishi_box">
+                                
                             </div>
                         </div>
                     </div>
@@ -77,28 +82,193 @@
         <script src="{{ secure_asset('js/jquery.notify.min.js') }}"></script>
     @endif
 
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
     <script>
-    const todo = new Vue({
-        el: '#app',
-        data: {
-            list: [],      // 入力テキストを入れる配列
-            last: null,    // 入力テキストの最終更新日
-            inputText: "", // テキストフォームで入力したデータの変数
-        },
-        methods: {
-            // 送信機能
-            send: function () {
 
-                // 最終更新日がNULLのとき
-                if(!todo.last){
-                    todo.last = { created_at: "1970-01-01 00:00:00" }
+        let paishi_array = [];
+        let paishi_img_tag_array = [];
+
+        $('#getFlash').on('click', function () {
+            console.log("getTest");
+        })
+        $.ajax({
+            type: 'GET',
+            url: 'getFlashPaishi',
+            dataType: 'json',
+        }).done(function (data) {
+            console.log(data);
+            // 牌姿をm,p,s,zで記述する配列に変換
+            data.forEach(element => {
+                paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
+            });
+
+            console.log("paishi_array");
+            console.log(paishi_array);
+
+            // 牌姿をimgタグに変換する（関数化）
+            paishi_array.forEach(pai_array => {
+                console.log("pai_array");
+                console.log(pai_array);
+                let pai_img_tag_array = [];
+
+                pai_array.forEach((elem, index)=> {
+                    console.log(elem);
+                    console.log(index);
+                    pai_img_tag_array.push(createPaiImage(elem));
+                })
+                paishi_img_tag_array.push(pai_img_tag_array);
+            });
+
+            console.log("paishi_img_tag_array");
+            console.log(paishi_img_tag_array);
+
+        }).fail(function () {
+            console.log("データ取得エラー");
+        });
+
+        function convertFromStringToArrayImageUrl(paishi) {
+
+            let pure_manzu = colorConvert(paishi, 'm').replace('m', '');
+            let pure_souzu = colorConvert(paishi, 's').replace('s', '');
+            let pure_pinzu = colorConvert(paishi, 'p').replace('p', '');
+            let pure_jihai = colorConvert(paishi, 'z').replace('z', '');
+            
+            let pure_manzu_img_array = [];
+            let pure_souzu_img_array = [];
+            let pure_pinzu_img_array = [];
+            let pure_jihai_img_array = [];
+
+            if(pure_manzu) {
+                for(let i = 0; i < pure_manzu.length; i++) {
+                    if(pure_manzu[i] === 'r') {
+                        pure_manzu_img_array.push('r5m');
+                        i++;
+                    } else {
+                        pure_manzu_img_array.push(pure_manzu[i]+'m');
+                    }
                 }
+            }
 
-                sendMessage(this.inputText, todo.last.created_at); // 送信メッセージ関数
-                this.inputText = ""; // 初期化
-            },
+            if(pure_souzu) {
+                for(let i = 0; i < pure_souzu.length; i++) {
+                    if(pure_souzu[i] === 'r') {
+                        pure_souzu_img_array.push('r5s');
+                        i++;
+                    } else {
+                        pure_souzu_img_array.push(pure_souzu[i]+'s');
+                    }
+                }
+            }
+
+            if(pure_pinzu) {
+                for(let i = 0; i < pure_pinzu.length; i++) {
+                    if(pure_pinzu[i] === 'r') {
+                        pure_pinzu_img_array.push('r5p');
+                        i++;
+                    } else {
+                        pure_pinzu_img_array.push(pure_pinzu[i]+'p');
+                    }
+                }
+            }
+
+            if(pure_jihai) {
+                for(let i = 0; i < pure_jihai.length; i++) {
+                    pure_jihai_img_array.push(pure_jihai[i]+'z');
+                }
+            }
+
+            let paishi_img_array = [];
+            paishi_img_array = paishi_img_array.concat(...pure_manzu_img_array,...pure_souzu_img_array,...pure_pinzu_img_array,pure_jihai_img_array);
+            return paishi_img_array;
+
         }
-    });
+
+        /**
+         * 
+         * @param {string} paishi 
+         * @param {string} colorHead 
+         */
+        function colorConvert(paishi, colorHead) {
+
+            // 除くべき色
+            switch (colorHead) {
+                case 'm':
+                    other_color = ['p', 's', 'z'];
+                    break;
+                case 'p':
+                    other_color = ['m', 's', 'z'];
+                    break;
+                case 's':
+                    other_color = ['m', 'p', 'z'];
+                    break;
+                case 'z':
+                    other_color = ['m', 'p', 's'];
+                    break;
+                default:
+            }
+
+            // mで区切られているポイント
+            const m_point = paishi.indexOf(colorHead);
+            // mのあとに存在するものは全て削除
+            const later_removed_after = paishi.replace(paishi.substring(m_point+1, paishi.length), '');
+            // m以前の文字列が存在する部分まで削除(rはのぞく)
+
+            const other_color_point1 = paishi.indexOf(other_color[0]);
+            const other_color_point2 = paishi.indexOf(other_color[1]);
+            const other_color_point3 = paishi.indexOf(other_color[2]);
+
+            const point_array = [];
+            const other_color_point_array = [other_color_point1,other_color_point2,other_color_point3];
+            for(const op of other_color_point_array) {
+                // -1の場合は存在していないことになるのでスルー
+                if(op == -1) {
+                    continue;
+                }
+                // m_pointより大きい場合はmのあとに存在することになるのでスルー
+                if(op > m_point) {
+                    continue;
+                }
+                point_array.push(op);
+            }
+            const point = Math.max(...point_array);
+            const removePaishi = later_removed_after.substring(0, point+1);
+            const pure_color = later_removed_after.replace(removePaishi, '');
+
+            return pure_color;
+        }
+
+        function createPaiImage (pai) {
+            if(pai == '1m') return "<img src={{ asset('/tile_images/man1.png') }} />";
+            if(pai == '2m') return "<img src={{ asset('/tile_images/man2.png') }} />";
+            if(pai == '3m') return "<img src={{ asset('/tile_images/man3.png') }} />";
+            if(pai == '4m') return "<img src={{ asset('/tile_images/man4.png') }} />";
+            if(pai == '5m') return "<img src={{ asset('/tile_images/man5.png') }} />";
+            if(pai == '6m') return "<img src={{ asset('/tile_images/man6.png') }} />";
+            if(pai == '7m') return "<img src={{ asset('/tile_images/man7.png') }} />";
+            if(pai == '8m') return "<img src={{ asset('/tile_images/man8.png') }} />";
+            if(pai == '9m') return "<img src={{ asset('/tile_images/man9.png') }} />";
+            if(pai == '1p') return "<img src={{ asset('/tile_images/pin1.png') }} />";
+            if(pai == '2p') return "<img src={{ asset('/tile_images/pin2.png') }} />";
+            if(pai == '3p') return "<img src={{ asset('/tile_images/pin3.png') }} />";
+            if(pai == '4p') return "<img src={{ asset('/tile_images/pin4.png') }} />";
+            if(pai == '5p') return "<img src={{ asset('/tile_images/pin5.png') }} />";
+            if(pai == '6p') return "<img src={{ asset('/tile_images/pin6.png') }} />";
+            if(pai == '7p') return "<img src={{ asset('/tile_images/pin7.png') }} />";
+            if(pai == '8p') return "<img src={{ asset('/tile_images/pin8.png') }} />";
+            if(pai == '9p') return "<img src={{ asset('/tile_images/pin9.png') }} />";
+            if(pai == '1s') return "<img src={{ asset('/tile_images/sou1.png') }} />";
+            if(pai == '2s') return "<img src={{ asset('/tile_images/sou2.png') }} />";
+            if(pai == '3s') return "<img src={{ asset('/tile_images/sou3.png') }} />";
+            if(pai == '4s') return "<img src={{ asset('/tile_images/sou4.png') }} />";
+            if(pai == '5s') return "<img src={{ asset('/tile_images/sou5.png') }} />";
+            if(pai == '6s') return "<img src={{ asset('/tile_images/sou6.png') }} />";
+            if(pai == '7s') return "<img src={{ asset('/tile_images/sou7.png') }} />";
+            if(pai == '8s') return "<img src={{ asset('/tile_images/sou8.png') }} />";
+            if(pai == '9s') return "<img src={{ asset('/tile_images/sou9.png') }} />";
+            if(pai == 'r5m') return "<img src={{ asset('/tile_images/aka5man.png') }} />";
+            if(pai == 'r5p') return "<img src={{ asset('/tile_images/aka5pin.png') }} />";
+            if(pai == 'r5s') return "<img src={{ asset('/tile_images/aka5sou.png') }} />";
+    }
     </script>
 
 </body>

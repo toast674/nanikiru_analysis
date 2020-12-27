@@ -7,6 +7,7 @@ use App\Question;
 use App\QuestionType;
 use App\Answer;
 use App\Book;
+use App\Flash;
 use App\Requests\NanikiruRequest;
 
 class FlashController extends Controller {
@@ -251,5 +252,13 @@ class FlashController extends Controller {
             $i++;
         }
         return $choice_array;
+    }
+
+    /**
+     * DBからデータを取得
+     */
+    public function getFlashPaishi() {
+        $paishi = Flash::get();
+        return response()->json($paishi);
     }
 }

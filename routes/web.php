@@ -22,3 +22,4 @@ Route::post('result','NanikiruController@result');
 Route::get('description','NanikiruController@description');
 Route::get('chart','BookChartController@index');
 Route::get('flash','FlashController@index');
+Route::get('getFlashPaishi','FlashController@getFlashPaishi');
