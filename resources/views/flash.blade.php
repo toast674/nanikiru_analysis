@@ -86,45 +86,56 @@
     <script>
 
         let paishi_array = [];
-        let paishi_img_tag_array = [];
+        let paishi_img_tag_all = [];
 
         $('#getFlash').on('click', function () {
-            console.log("getTest");
         })
         $.ajax({
             type: 'GET',
             url: 'getFlashPaishi',
             dataType: 'json',
         }).done(function (data) {
-            console.log(data);
             // 牌姿をm,p,s,zで記述する配列に変換
             data.forEach(element => {
                 paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
             });
 
-            console.log("paishi_array");
-            console.log(paishi_array);
-
+            let box = document.getElementById("paishi_box");
+            console.log(box);
+            console.log(box.innerHTML);
+            
             // 牌姿をimgタグに変換する（関数化）
             paishi_array.forEach(pai_array => {
-                console.log("pai_array");
-                console.log(pai_array);
                 let pai_img_tag_array = [];
-
                 pai_array.forEach((elem, index)=> {
-                    console.log(elem);
-                    console.log(index);
                     pai_img_tag_array.push(createPaiImage(elem));
                 })
-                paishi_img_tag_array.push(pai_img_tag_array);
+                pai_img_tag_array.forEach(pai_img_tag => {
+                    box.innerHTML += pai_img_tag;
+                })
+                paishi_img_tag_all.push(pai_img_tag_array);
             });
-
-            console.log("paishi_img_tag_array");
-            console.log(paishi_img_tag_array);
-
+            console.log(paishi_img_tag_all);
+            flashHtml(paishi_img_tag_all);
         }).fail(function () {
             console.log("データ取得エラー");
         });
+
+
+        function flashHtml(paishi_img_tag_all) {
+            let count = 0;
+            let test = function(paishi_img_tag_all) {
+                console.log(paishi_img_tag_all);
+                console.log(count);
+                count++;
+
+                if(count > 5) {
+                    clearInterval(id);
+                }
+            }
+            let id = setInterval(test, 3000, paishi_img_tag_all);
+
+        }
 
         function convertFromStringToArrayImageUrl(paishi) {
 
@@ -265,6 +276,13 @@
             if(pai == '7s') return "<img src={{ asset('/tile_images/sou7.png') }} />";
             if(pai == '8s') return "<img src={{ asset('/tile_images/sou8.png') }} />";
             if(pai == '9s') return "<img src={{ asset('/tile_images/sou9.png') }} />";
+            if(pai == '1z') return "<img src={{ asset('/tile_images/ji1.png') }} />";
+            if(pai == '2z') return "<img src={{ asset('/tile_images/ji2.png') }} />";
+            if(pai == '3z') return "<img src={{ asset('/tile_images/ji3.png') }} />";
+            if(pai == '4z') return "<img src={{ asset('/tile_images/ji4.png') }} />";
+            if(pai == '5z') return "<img src={{ asset('/tile_images/ji5.png') }} />";
+            if(pai == '6z') return "<img src={{ asset('/tile_images/ji6.png') }} />";
+            if(pai == '7z') return "<img src={{ asset('/tile_images/ji7.png') }} />";
             if(pai == 'r5m') return "<img src={{ asset('/tile_images/aka5man.png') }} />";
             if(pai == 'r5p') return "<img src={{ asset('/tile_images/aka5pin.png') }} />";
             if(pai == 'r5s') return "<img src={{ asset('/tile_images/aka5sou.png') }} />";
