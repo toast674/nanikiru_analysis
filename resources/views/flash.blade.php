@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Mahsis</title>
+    <title>フラッシュ何切る</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://unpkg.com/sanitize.css" />
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
@@ -29,37 +29,66 @@
 <body class="nanikiru">
     @include('part.header')
     <div class="container">
-        <button id="getFlash">スタート</button>
         <form method="POST" action="result" name="nanikiruForm">
             <div class="card-outer">
                 @csrf
                 <!-- 牌姿画像 -->
-                @foreach($paishi_image_array as $i => $paishi_image)
-                <?php $qa_num = $i+1; ?>
                 <div class="card fade-in-left">
                     <div class="problem">
                         <div class="question-area">
 
                             <!-- 牌姿を作成 -->
-                            <div class="paishi">
-                                @foreach($paishi_image as $pai_image)
-                                @if(app('env')=='local')
-                                    <img src="{{ asset("/tile_images/$pai_image") }}">
-                                @endif
-                                @if(app('env')=='production')
-                                    <img src="{{ secure_asset("/tile_images/$pai_image") }}">
-                                @endif
-                                @endforeach
-                                <br>
-                            </div>
-
-                            <div id="paishi_box">
+                            <div id="paishi_box" class="paishi">
                                 
                             </div>
                         </div>
                     </div>
                 </div>
-                @endforeach
+            </div>
+
+            <div>
+                <label>
+                    問題数
+                </label>
+                <select name="question_count" id="question_count">
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                </select>
+                問
+            </div>
+            <div>
+                <label>
+                    表示間隔
+                </label>
+                <select name="question_second" id="question_second">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                秒
+            </div>
+
+            <div class="action-choices">
+                <label for="start-btn">
+                    <div class="btn-shine">
+                        <input id="start-btn" class="trans-btn pointer" type="button" value="スタート"
+                            onfocus="this.blur();">
+                    </div>
+                </label>
             </div>
         </form>
     </div>
@@ -88,53 +117,52 @@
         let paishi_array = [];
         let paishi_img_tag_all = [];
 
-        $('#getFlash').on('click', function () {
-        })
-        $.ajax({
-            type: 'GET',
-            url: 'getFlashPaishi',
-            dataType: 'json',
-        }).done(function (data) {
-            // 牌姿をm,p,s,zで記述する配列に変換
-            data.forEach(element => {
-                paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
-            });
+        $('#start-btn').on('click', function () {
+            $.ajax({
+                type: 'GET',
+                url: 'getFlashPaishi',
+                dataType: 'json',
+            }).done(function (data) {
+                // 牌姿をm,p,s,zで記述する配列に変換
+                data.forEach(element => {
+                    paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
+                });
+                
+                let question_count = document.getElementById('question_count').value;
+                let question_second = document.getElementById('question_second').value;
 
-            let box = document.getElementById("paishi_box");
-            console.log(box);
-            console.log(box.innerHTML);
-            
-            // 牌姿をimgタグに変換する（関数化）
-            paishi_array.forEach(pai_array => {
-                let pai_img_tag_array = [];
-                pai_array.forEach((elem, index)=> {
-                    pai_img_tag_array.push(createPaiImage(elem));
-                })
-                pai_img_tag_array.forEach(pai_img_tag => {
-                    box.innerHTML += pai_img_tag;
-                })
-                paishi_img_tag_all.push(pai_img_tag_array);
-            });
-            console.log(paishi_img_tag_all);
-            flashHtml(paishi_img_tag_all);
-        }).fail(function () {
-            console.log("データ取得エラー");
-        });
-
-
-        function flashHtml(paishi_img_tag_all) {
-            let count = 0;
-            let test = function(paishi_img_tag_all) {
+                // 牌姿をimgタグに変換する（関数化）
+                paishi_array.forEach(pai_array => {
+                    let pai_img_tag_array = [];
+                    pai_array.forEach((elem, index)=> {
+                        pai_img_tag_array.push(createPaiImage(elem));
+                    })
+                    paishi_img_tag_all.push(pai_img_tag_array);
+                });
+                
                 console.log(paishi_img_tag_all);
-                console.log(count);
-                count++;
+                flashHtml(paishi_img_tag_all, question_count, question_second);
 
-                if(count > 5) {
+            }).fail(function () {
+                console.log("データ取得エラー");
+            });
+        })
+
+        function flashHtml(paishi_img_tag_all, question_count, question_second) {
+            let box = document.getElementById("paishi_box");
+
+            let showPaishi = function(paishi_img_tag_all) {
+                box.innerHTML = "";
+                paishi_img_tag_all[question_count].forEach(el => {
+                    box.innerHTML += el;
+                })
+                question_count--;
+
+                if(question_count <= 0) {
                     clearInterval(id);
                 }
             }
-            let id = setInterval(test, 3000, paishi_img_tag_all);
-
+            let id = setInterval(showPaishi, question_second*1000, paishi_img_tag_all);
         }
 
         function convertFromStringToArrayImageUrl(paishi) {
