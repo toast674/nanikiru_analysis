@@ -141,12 +141,34 @@
                 });
                 
                 console.log(paishi_img_tag_all);
+                startCount();
                 flashHtml(paishi_img_tag_all, question_count, question_second);
 
             }).fail(function () {
                 console.log("データ取得エラー");
             });
         })
+
+        // カウントダウン
+        function startCount() {
+            let box = document.getElementById("paishi_box");
+            //let timeCount = 3;
+            console.log(box);
+            console.log("カウントダウン");
+            let getCount = function(timeCount) {
+                console.log(timeCount);
+                box.innerHTML = "";
+                box.innerHTML += "<div>" + timeCount + "</div>";
+                console.log(box.innerHTML);
+                timeCount--;
+
+                if(timeCount <= 0) {
+                    clearInterval(timeId);
+                }
+            }
+
+            let timeId = setInterval(getCount, 1000, timeCount);
+        }
 
         function flashHtml(paishi_img_tag_all, question_count, question_second) {
             let box = document.getElementById("paishi_box");
