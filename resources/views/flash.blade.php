@@ -114,10 +114,33 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
     <script>
 
-        let paishi_array = [];
-        let paishi_img_tag_all = [];
-
         $('#start-btn').on('click', function () {
+            startCount();
+        })
+
+        // カウントダウン
+        function startCount() {
+            let box = document.getElementById("paishi_box");
+            let timeCount = 3;
+            console.log(box);
+            console.log("カウントダウン");
+            let getCount = function() {
+                box.innerHTML = "";
+                box.innerHTML = "<p>" + timeCount + "</p>";
+                timeCount--;
+
+                // カウントダウン後にフラッシュ起動
+                if(timeCount <= 0) {
+                    clearInterval(timeId);
+                    doFlash();
+                }
+            }
+            let timeId = setInterval(getCount, 1000);
+        }
+
+        function doFlash() {
+            let paishi_array = [];
+
             $.ajax({
                 type: 'GET',
                 url: 'getFlashPaishi',
@@ -132,42 +155,27 @@
                 let question_second = document.getElementById('question_second').value;
 
                 // 牌姿をimgタグに変換する（関数化）
-                paishi_array.forEach(pai_array => {
-                    let pai_img_tag_array = [];
-                    pai_array.forEach((elem, index)=> {
-                        pai_img_tag_array.push(createPaiImage(elem));
-                    })
-                    paishi_img_tag_all.push(pai_img_tag_array);
-                });
+                let paishi_img_tag_all = convertImgTag(paishi_array);
                 
                 console.log(paishi_img_tag_all);
-                startCount();
                 flashHtml(paishi_img_tag_all, question_count, question_second);
 
             }).fail(function () {
                 console.log("データ取得エラー");
             });
-        })
+        }
 
-        // カウントダウン
-        function startCount() {
-            let box = document.getElementById("paishi_box");
-            //let timeCount = 3;
-            console.log(box);
-            console.log("カウントダウン");
-            let getCount = function(timeCount) {
-                console.log(timeCount);
-                box.innerHTML = "";
-                box.innerHTML += "<div>" + timeCount + "</div>";
-                console.log(box.innerHTML);
-                timeCount--;
+        function convertImgTag(paishi_array) {
+            let paishi_img_tag_all = [];
 
-                if(timeCount <= 0) {
-                    clearInterval(timeId);
-                }
-            }
-
-            let timeId = setInterval(getCount, 1000, timeCount);
+            paishi_array.forEach(pai_array => {
+                let pai_img_tag_array = [];
+                pai_array.forEach((elem, index)=> {
+                    pai_img_tag_array.push(createPaiImage(elem));
+                })
+                paishi_img_tag_all.push(pai_img_tag_array);
+            });
+            return paishi_img_tag_all;
         }
 
         function flashHtml(paishi_img_tag_all, question_count, question_second) {
