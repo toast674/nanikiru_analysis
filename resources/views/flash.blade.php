@@ -150,6 +150,8 @@
                 data.forEach(element => {
                     paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
                 });
+
+                questionSuffle(paishi_array);
                 
                 let question_count = document.getElementById('question_count').value;
                 let question_second = document.getElementById('question_second').value;
@@ -157,12 +159,20 @@
                 // 牌姿をimgタグに変換する（関数化）
                 let paishi_img_tag_all = convertImgTag(paishi_array);
                 
-                console.log(paishi_img_tag_all);
                 flashHtml(paishi_img_tag_all, question_count, question_second);
 
             }).fail(function () {
                 console.log("データ取得エラー");
             });
+        }
+
+        function questionSuffle(array) {
+            for(var i = array.length - 1; i > 0; i--){
+                var r = Math.floor(Math.random() * (i + 1));
+                var tmp = array[i];
+                array[i] = array[r];
+                array[r] = tmp;
+            }
         }
 
         function convertImgTag(paishi_array) {
