@@ -140,6 +140,8 @@
 
         function doFlash() {
             let paishi_array = [];
+            let answer_array = [];
+            let question_set = {};
 
             $.ajax({
                 type: 'GET',
@@ -149,30 +151,44 @@
                 // 牌姿をm,p,s,zで記述する配列に変換
                 data.forEach(element => {
                     paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
+                    answer_array.push(convertFromStringToArrayImageUrl(element.answer));
                 });
+                question_set["paishi"] = paishi_array;
+                question_set["answer"] = answer_array;
 
-                questionSuffle(paishi_array);
+                questionSuffle(question_set);
                 
                 let question_count = document.getElementById('question_count').value;
                 let question_second = document.getElementById('question_second').value;
 
                 // 牌姿をimgタグに変換する（関数化）
                 let paishi_img_tag_all = convertImgTag(paishi_array);
+                let answer_img_tag = convertImgTag(answer_array);
                 
-                flashHtml(paishi_img_tag_all, question_count, question_second);
+                flashHtml(paishi_img_tag_all, answer_img_tag, question_count, question_second);
 
             }).fail(function () {
                 console.log("データ取得エラー");
             });
         }
 
-        function questionSuffle(array) {
-            for(var i = array.length - 1; i > 0; i--){
-                var r = Math.floor(Math.random() * (i + 1));
-                var tmp = array[i];
-                array[i] = array[r];
-                array[r] = tmp;
+        function questionSuffle(obj) {
+            paishi_array = obj.paishi;
+            answer_array = obj.answer;
+
+            for(let i = paishi_array.length - 1; i > 0; i--){
+                let r = Math.floor(Math.random() * (i + 1));
+                let tmp_p = paishi_array[i];
+                let tmp_a = answer_array[i];
+                paishi_array[i] = paishi_array[r];
+                answer_array[i] = answer_array[r];
+                paishi_array[r] = tmp_p;
+                answer_array[r] = tmp_a;
             }
+            obj.paishi = paishi_array;
+            obj.answer = answer_array;
+            console.log(obj);
+            return obj;
         }
 
         function convertImgTag(paishi_array) {
@@ -188,7 +204,7 @@
             return paishi_img_tag_all;
         }
 
-        function flashHtml(paishi_img_tag_all, question_count, question_second) {
+        function flashHtml(paishi_img_tag_all, answer_img_tag, question_count, question_second) {
             let box = document.getElementById("paishi_box");
 
             let showPaishi = function(paishi_img_tag_all) {
@@ -196,9 +212,13 @@
                 paishi_img_tag_all[question_count].forEach(el => {
                     box.innerHTML += el;
                 })
+                // answer_img_tag[question_count].forEach(el => {
+                //     box.innerHTML += el;
+                // })
                 question_count--;
 
                 if(question_count <= 0) {
+                    box.innerHTML = "終了！";
                     clearInterval(id);
                 }
             }
