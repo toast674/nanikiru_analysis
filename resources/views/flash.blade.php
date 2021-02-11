@@ -50,21 +50,21 @@
                 <label>
                     問題数
                 </label>
-                <select name="question_count" id="question_count">
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
+                <select name="question_count" id="question_count" class="black-text">
+                    <option value="2" class="black-text">2</option>
+                    <option value="3" class="black-text">3</option>
+                    <option value="4" class="black-text">4</option>
+                    <option value="5" class="black-text">5</option>
+                    <option value="6" class="black-text">6</option>
+                    <option value="7" class="black-text">7</option>
+                    <option value="8" class="black-text">8</option>
+                    <option value="9" class="black-text">9</option>
+                    <option value="10" class="black-text">10</option>
+                    <option value="11" class="black-text">11</option>
+                    <option value="12" class="black-text">12</option>
+                    <option value="13" class="black-text">13</option>
+                    <option value="14" class="black-text">14</option>
+                    <option value="15" class="black-text">15</option>
                 </select>
                 問
             </div>
@@ -72,12 +72,12 @@
                 <label>
                     表示間隔
                 </label>
-                <select name="question_second" id="question_second">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                <select name="question_second" id="question_second" class="black-text">
+                    <option value="1" class="black-text">1</option>
+                    <option value="2" class="black-text">2</option>
+                    <option value="3" class="black-text">3</option>
+                    <option value="4" class="black-text">4</option>
+                    <option value="5" class="black-text">5</option>
                 </select>
                 秒
             </div>
