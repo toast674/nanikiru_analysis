@@ -29,7 +29,10 @@
 <body class="nanikiru">
     @include('part.header')
     <div class="container">
-        <form method="POST" action="result" name="nanikiruForm">
+        <form method="POST" name="flash">
+            <div class="rule">
+                <p>東一局　西家 6巡目　ドラ<img src="{{ asset("/tile_images/ji1.png") }}"></p>
+            </div>
             <div class="card-outer">
                 @csrf
                 <!-- 牌姿画像 -->

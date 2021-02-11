@@ -25,20 +25,20 @@
         @include('part.header')
         <div class="container top">
             <div class="front">
-                <div class="top-description">
+                <!-- <div class="top-description">
                     <div class="description-title">
                         <h2>Mahsis(マーシス)では<span class="sp-none">、</span><br class="sp-br">雀力の強みと弱みを<br class="sp-br">分析できます。</h2>
                     </div>
                     <div class="description-detail">
                         <p>何切るに答えることで<span class="sp-none">、</span><br class="sp-br">牌効率の強みと弱みを<br class="sp-br">知ることができます。</p>
                     </div>
-                </div>
-                <div class="action-choices">
+                </div> -->
+                <!-- <div class="action-choices">
                     <button type="button" class="trans-btn" onclick="location.href='nanikiru'" onfocus="this.blur();"><span class="btn-shine">分析する</span></button>
                 </div>
                 <div class="action-choices">
                     <button type="button" class="trans-btn" onclick="location.href='chart'" onfocus="this.blur();"><span class="btn-shine">戦術書検索</span></button>
-                </div>
+                </div> -->
                 <div class="action-choices">
                     <button type="button" class="trans-btn" onclick="location.href='flash'" onfocus="this.blur();"><span class="btn-shine">フラッシュ何切る</span></button>
                 </div>
