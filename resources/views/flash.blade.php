@@ -31,7 +31,7 @@
     <div class="container">
         <form method="POST" name="flash">
             <div class="rule">
-                <p>東一局　西家 6巡目　ドラ<img src="{{ asset("/tile_images/ji1.png") }}"></p>
+                <p class="font_24px">東一局　西家 6巡目　ドラ<img id="dora" src="{{ asset("/tile_images/ji1.png") }}"></p>
             </div>
             <div class="card-outer">
                 @csrf
@@ -49,11 +49,11 @@
                 </div>
             </div>
 
-            <div>
+            <div class="font_24px">
                 <label>
                     問題数
                 </label>
-                <select name="question_count" id="question_count" class="black-text">
+                <select name="question_count" id="question_count" class="black-text" class="font_24px">
                     <option value="2" class="black-text">2</option>
                     <option value="3" class="black-text">3</option>
                     <option value="4" class="black-text">4</option>
@@ -71,11 +71,11 @@
                 </select>
                 問
             </div>
-            <div>
+            <div class="font_24px">
                 <label>
                     表示間隔
                 </label>
-                <select name="question_second" id="question_second" class="black-text">
+                <select name="question_second" id="question_second" class="black-text" class="font_24px">
                     <option value="1" class="black-text">1</option>
                     <option value="2" class="black-text">2</option>
                     <option value="3" class="black-text">3</option>

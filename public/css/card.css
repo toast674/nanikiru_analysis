@@ -88,3 +88,9 @@
 .card-tag label {
   cursor: pointer;
 }
+#dora {
+  width: 5%;
+}
+.font_24px {
+  font-size: 24px;
+}
