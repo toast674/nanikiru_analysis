@@ -117,31 +117,83 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
     <script>
 
+        $(function(){
+            let images = [
+                '/tile_images/man1.png',
+                '/tile_images/man2.png',
+                '/tile_images/man3.png',
+                '/tile_images/man4.png',
+                '/tile_images/man5.png',
+                '/tile_images/man6.png',
+                '/tile_images/man7.png',
+                '/tile_images/man8.png',
+                '/tile_images/man9.png',
+                '/tile_images/pin1.png',
+                '/tile_images/pin2.png',
+                '/tile_images/pin3.png',
+                '/tile_images/pin4.png',
+                '/tile_images/pin5.png',
+                '/tile_images/pin6.png',
+                '/tile_images/pin7.png',
+                '/tile_images/pin8.png',
+                '/tile_images/pin9.png',
+                '/tile_images/sou1.png',
+                '/tile_images/sou2.png',
+                '/tile_images/sou3.png',
+                '/tile_images/sou4.png',
+                '/tile_images/sou5.png',
+                '/tile_images/sou6.png',
+                '/tile_images/sou7.png',
+                '/tile_images/sou8.png',
+                '/tile_images/sou9.png',
+                '/tile_images/ji1.png',
+                '/tile_images/ji2.png',
+                '/tile_images/ji3.png',
+                '/tile_images/ji4.png',
+                '/tile_images/ji5.png',
+                '/tile_images/ji6.png',
+                '/tile_images/ji7.png',
+                '/tile_images/aka5man.png',
+                '/tile_images/aka5pin.png',
+                '/tile_images/aka5sou.png',
+            ];
+            for (i = 0; i < images.length; i++){
+                let imgtag = document.createElement('img');
+                imgtag.src = images[i];
+            }
+        });
+
+        // prepareFlashで設定され、flashHtmlで用いる引数
+        var prepared_question_count = "";
+        var prepared_question_second = "";
+        var prepared_paishi_img_tag_all = "";
+        var prepared_answer_img_tag = "";
+
         $('#start-btn').on('click', function () {
+            prepareFlash();
             startCount();
         })
 
         // カウントダウン
         function startCount() {
-            let box = document.getElementById("paishi_box");
+            let paishi_box = document.getElementById("paishi_box");
             let timeCount = 3;
-            console.log(box);
-            console.log("カウントダウン");
+
             let getCount = function() {
-                box.innerHTML = "";
-                box.innerHTML = "<p>" + timeCount + "</p>";
+                paishi_box.innerHTML = "";
+                paishi_box.innerHTML = "<p>" + timeCount + "</p>";
                 timeCount--;
 
-                // カウントダウン後にフラッシュ起動
-                if(timeCount <= 0) {
+                // カウントダウン後にフラッシュ起動 各変数の読み込みチェック
+                if(timeCount <= 0 && prepared_paishi_img_tag_all && prepared_answer_img_tag && prepared_question_count && prepared_question_second) {
                     clearInterval(timeId);
-                    doFlash();
+                    flashHtml(prepared_paishi_img_tag_all, prepared_answer_img_tag, prepared_question_count, prepared_question_second);
                 }
             }
             let timeId = setInterval(getCount, 1000);
         }
 
-        function doFlash() {
+        function prepareFlash() {
             let paishi_array = [];
             let answer_array = [];
             let question_set = {};
@@ -161,17 +213,15 @@
 
                 questionSuffle(question_set);
                 
-                let question_count = document.getElementById('question_count').value;
-                let question_second = document.getElementById('question_second').value;
+                prepared_question_count = document.getElementById('question_count').value;
+                prepared_question_second = document.getElementById('question_second').value;
 
-                // 牌姿をimgタグに変換する（関数化）
-                let paishi_img_tag_all = convertImgTag(paishi_array);
-                let answer_img_tag = convertImgTag(answer_array);
+                // 牌姿をimgタグに変換
+                prepared_paishi_img_tag_all = convertImgTag(paishi_array);
+                prepared_answer_img_tag = convertImgTag(answer_array);
                 
-                flashHtml(paishi_img_tag_all, answer_img_tag, question_count, question_second);
-
             }).fail(function () {
-                console.log("データ取得エラー");
+                console.log("データ取得エラーです。管理者に連絡してください。");
             });
         }
 
@@ -207,10 +257,12 @@
             return paishi_img_tag_all;
         }
 
+        // フラッシュさせる
         function flashHtml(paishi_img_tag_all, answer_img_tag, question_count, question_second) {
             let box = document.getElementById("paishi_box");
 
             let showPaishi = function(paishi_img_tag_all) {
+
                 box.innerHTML = "";
                 paishi_img_tag_all[question_count].forEach(el => {
                     box.innerHTML += el;
@@ -220,7 +272,7 @@
                 // })
                 question_count--;
 
-                if(question_count <= 0) {
+                if(question_count < 0) {
                     box.innerHTML = "終了！";
                     clearInterval(id);
                 }
@@ -377,7 +429,8 @@
             if(pai == 'r5m') return "<img src={{ asset('/tile_images/aka5man.png') }} />";
             if(pai == 'r5p') return "<img src={{ asset('/tile_images/aka5pin.png') }} />";
             if(pai == 'r5s') return "<img src={{ asset('/tile_images/aka5sou.png') }} />";
-    }
+        }
+
     </script>
 
 </body>
