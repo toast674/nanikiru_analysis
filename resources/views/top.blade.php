@@ -20,6 +20,8 @@
         @endif
         <style>
         </style>
+
+        @include('part.ga')
     </head>
     <body class="top full-screen">
         @include('part.header')

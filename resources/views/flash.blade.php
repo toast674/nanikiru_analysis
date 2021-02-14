@@ -22,6 +22,7 @@
         <link rel="stylesheet" type="text/css" href="{{ secure_asset('css/jquery.notify.css') }}">
     @endif
 
+    @include('part.ga')
     <style>
     </style>
 </head>
@@ -88,7 +89,7 @@
             <div class="action-choices">
                 <label for="start-btn">
                     <div class="btn-shine">
-                        <input id="start-btn" class="trans-btn pointer" type="button" value="スタート"
+                        <input id="start-btn" class="trans-btn pointer" type="button" value="問題読み込み中" disabled
                             onfocus="this.blur();">
                     </div>
                 </label>
@@ -161,6 +162,7 @@
                 let imgtag = document.createElement('img');
                 imgtag.src = images[i];
             }
+            prepareFlash();
         });
 
         // prepareFlashで設定され、flashHtmlで用いる引数
@@ -170,7 +172,8 @@
         var prepared_answer_img_tag = "";
 
         $('#start-btn').on('click', function () {
-            prepareFlash();
+            prepared_question_count = document.getElementById('question_count').value;
+            prepared_question_second = document.getElementById('question_second').value;
             startCount();
         })
 
@@ -185,7 +188,7 @@
                 timeCount--;
 
                 // カウントダウン後にフラッシュ起動 各変数の読み込みチェック
-                if(timeCount <= 0 && prepared_paishi_img_tag_all && prepared_answer_img_tag && prepared_question_count && prepared_question_second) {
+                if(timeCount <= 0) {
                     clearInterval(timeId);
                     flashHtml(prepared_paishi_img_tag_all, prepared_answer_img_tag, prepared_question_count, prepared_question_second);
                 }
@@ -212,13 +215,13 @@
                 question_set["answer"] = answer_array;
 
                 questionSuffle(question_set);
-                
-                prepared_question_count = document.getElementById('question_count').value;
-                prepared_question_second = document.getElementById('question_second').value;
 
                 // 牌姿をimgタグに変換
                 prepared_paishi_img_tag_all = convertImgTag(paishi_array);
                 prepared_answer_img_tag = convertImgTag(answer_array);
+
+                $('#start-btn').val("スタート");
+                $('#start-btn').prop('disabled', false);
                 
             }).fail(function () {
                 console.log("データ取得エラーです。管理者に連絡してください。");
@@ -240,7 +243,6 @@
             }
             obj.paishi = paishi_array;
             obj.answer = answer_array;
-            console.log(obj);
             return obj;
         }
 

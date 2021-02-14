@@ -22,6 +22,8 @@
     @endif
     <style>
     </style>
+
+    @include('part.ga')(env(GA_ENABLE), 'part.ga')
 </head>
 
 <body>

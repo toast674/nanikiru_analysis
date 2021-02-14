@@ -7,6 +7,8 @@
         <title>Mizukuma</title>
         <!-- cssをインポート -->
         <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css">
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-G9J2DJ7Z7Z"></script>
     </head>
     <body>
         @include('parts.header')
