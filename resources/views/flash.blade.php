@@ -77,8 +77,11 @@
                     表示間隔
                 </label>
                 <select name="question_second" id="question_second" class="black-text" class="font_24px">
+                    <option value="0.5" class="black-text">0.5</option>
                     <option value="1" class="black-text">1</option>
+                    <option value="1.5" class="black-text">1.5</option>
                     <option value="2" class="black-text">2</option>
+                    <option value="2.5" class="black-text">2.5</option>
                     <option value="3" class="black-text">3</option>
                     <option value="4" class="black-text">4</option>
                     <option value="5" class="black-text">5</option>
@@ -88,11 +91,30 @@
 
             <div class="action-choices">
                 <label for="start-btn">
-                    <div class="btn-shine">
+                    <div class="btn-shine start-btn-div">
                         <input id="start-btn" class="trans-btn pointer" type="button" value="問題読み込み中" disabled
                             onfocus="this.blur();">
                     </div>
+                    <div class="btn-shine restart-btn-div">
+                        <input id="restart-btn" class="trans-btn pointer" type="button" value="再スタート"
+                            onfocus="this.blur();">
+                    </div>
                 </label>
+            </div>
+
+            <div>
+                <div class="btn-shine answer-btn-div">
+                    <input id="answer-btn" class="trans-btn pointer" type="button" value="答えを見る"
+                        onfocus="this.blur();">
+                </div>
+                <div id="answer-box-div" class="card-outer">
+                    <!-- <div class="card fade-in-left">
+                        <div class="problem">
+                            <div id="ans-paishi-area" class="ans-question-area">
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
             </div>
         </form>
     </div>
@@ -119,6 +141,9 @@
     <script>
 
         $(function(){
+            $('.restart-btn-div').hide();
+            $('.answer-btn-div').hide();
+            
             let images = [
                 '/tile_images/man1.png',
                 '/tile_images/man2.png',
@@ -170,12 +195,27 @@
         var prepared_question_second = "";
         var prepared_paishi_img_tag_all = "";
         var prepared_answer_img_tag = "";
+        var suffled_question_set = {};
 
         $('#start-btn').on('click', function () {
             prepared_question_count = document.getElementById('question_count').value;
             prepared_question_second = document.getElementById('question_second').value;
             startCount();
-        })
+            $('.start-btn-div').hide();
+        });
+
+        $('#restart-btn').on('click', function () {
+            prepareFlash();
+            prepared_question_count = document.getElementById('question_count').value;
+            prepared_question_second = document.getElementById('question_second').value;
+            startCount();
+            $('.restart-btn-div').hide();
+        });
+
+        $('#answer-btn').on('click', function () {
+            console.log("答えボタンを押した");
+            showAnswer();
+        });
 
         // カウントダウン
         function startCount() {
@@ -187,7 +227,7 @@
                 paishi_box.innerHTML = "<p>" + timeCount + "</p>";
                 timeCount--;
 
-                // カウントダウン後にフラッシュ起動 各変数の読み込みチェック
+                // カウントダウン後にフラッシュ起動
                 if(timeCount <= 0) {
                     clearInterval(timeId);
                     flashHtml(prepared_paishi_img_tag_all, prepared_answer_img_tag, prepared_question_count, prepared_question_second);
@@ -197,7 +237,29 @@
         }
 
         function showAnswer() {
+            let answer_box_div = document.getElementById("answer-box-div");
+            console.log(answer_box_div);
             
+            for(let i = 0; i < prepared_question_count; i++) {
+                // ans_paishi_area.innerHTML += ;
+                // ans_paishi_area.innerHTML += i+1;
+                let tag_string = "";
+                prepared_paishi_img_tag_all[i].forEach(el => {
+                    tag_string += el;
+                });
+                console.log(tag_string);
+                console.log(i);
+
+                let before_tag = '<div class="card fade-in-left"><div class="problem"><div id="ans-paishi-area" class="question-area">';
+                let after_tag = '</div></div></div>';
+
+                answer_box_div.insertAdjacentHTML("beforeend", `${before_tag} Q ${i+1} <div class="paishi"> ${tag_string} </div>  ${after_tag}`);
+
+                // ans_paishi_area.innerHTML += 'A.';
+                // ans_paishi_area.innerHTML += prepared_answer_img_tag[i];
+                // ans_paishi_area.innerHTML += '</p>';
+            }
+            console.log(prepared_question_count);
         }
 
         function prepareFlash() {
@@ -218,17 +280,18 @@
                 question_set["paishi"] = paishi_array;
                 question_set["answer"] = answer_array;
 
-                questionSuffle(question_set);
+                suffled_question_set = questionSuffle(question_set);
+                console.log(suffled_question_set == question_set)
 
                 // 牌姿をimgタグに変換
-                prepared_paishi_img_tag_all = convertImgTag(paishi_array);
-                prepared_answer_img_tag = convertImgTag(answer_array);
+                prepared_paishi_img_tag_all = convertImgTag(suffled_question_set.paishi);
+                prepared_answer_img_tag = convertImgTag(suffled_question_set.answer);
 
                 $('#start-btn').val("スタート");
                 $('#start-btn').prop('disabled', false);
                 
             }).fail(function () {
-                console.log("データ取得エラーです。管理者に連絡してください。");
+                console.log("データ取得エラー");
             });
         }
 
@@ -266,20 +329,23 @@
         // フラッシュさせる
         function flashHtml(paishi_img_tag_all, answer_img_tag, question_count, question_second) {
             let box = document.getElementById("paishi_box");
+            let i = 0;
 
             let showPaishi = function(paishi_img_tag_all) {
 
                 box.innerHTML = "";
-                paishi_img_tag_all[question_count].forEach(el => {
+                paishi_img_tag_all[i].forEach(el => {
                     box.innerHTML += el;
                 })
-                // answer_img_tag[question_count].forEach(el => {
+                // answer_img_tag[i].forEach(el => {
                 //     box.innerHTML += el;
                 // })
-                question_count--;
+                i++;
 
-                if(question_count < 0) {
+                if(i > question_count) {
                     box.innerHTML = "終了！";
+                    $('.restart-btn-div').show();
+                    $('.answer-btn-div').show();
                     clearInterval(id);
                 }
             }

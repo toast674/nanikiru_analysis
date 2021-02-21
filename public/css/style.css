@@ -542,6 +542,22 @@ body {
     flex-direction: column;
 }
 
+/* flash用 */
+.ans-question-area {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ans-question-area img {
+    width: calc(var(--pai-to-char) * 1em);
+    max-width: calc(var(--pai-to-char) * 1em);
+    height: auto;
+}
+
+
 .answer-area {
     height: calc(var(--card-height) * 0.3);
     width: 100%;
