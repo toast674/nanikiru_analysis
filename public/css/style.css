@@ -681,3 +681,7 @@ body {
 .selected {
     outline: solid 4px #6C9BD2;
 }
+
+.pt-40 {
+    padding-top: 40px !important;
+}

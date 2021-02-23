@@ -202,6 +202,7 @@
             prepared_question_second = document.getElementById('question_second').value;
             startCount();
             $('.start-btn-div').hide();
+            $('#answer-box-div').hide();
         });
 
         $('#restart-btn').on('click', function () {
@@ -210,10 +211,12 @@
             prepared_question_second = document.getElementById('question_second').value;
             startCount();
             $('.restart-btn-div').hide();
+            $('.answer-btn-div').hide();
+            $('#answer-box-div').hide();
         });
 
         $('#answer-btn').on('click', function () {
-            console.log("答えボタンを押した");
+            $('#answer-box-div').show();
             showAnswer();
         });
 
@@ -238,26 +241,25 @@
 
         function showAnswer() {
             let answer_box_div = document.getElementById("answer-box-div");
-            console.log(answer_box_div);
-            
+            answer_box_div.innerHTML = "";
+
             for(let i = 0; i < prepared_question_count; i++) {
                 // ans_paishi_area.innerHTML += ;
                 // ans_paishi_area.innerHTML += i+1;
-                let tag_string = "";
+                let question_paishi_tag_string = "";
+                let answer_tag_string = "";
                 prepared_paishi_img_tag_all[i].forEach(el => {
-                    tag_string += el;
+                    question_paishi_tag_string += el;
                 });
-                console.log(tag_string);
+
+                console.log(question_paishi_tag_string);
                 console.log(i);
 
-                let before_tag = '<div class="card fade-in-left"><div class="problem"><div id="ans-paishi-area" class="question-area">';
-                let after_tag = '</div></div></div>';
+                let before_tag = '<div class="card fade-in-left"><div class="problem">';
+                let after_tag = '</div></div>';
 
-                answer_box_div.insertAdjacentHTML("beforeend", `${before_tag} Q ${i+1} <div class="paishi"> ${tag_string} </div>  ${after_tag}`);
-
-                // ans_paishi_area.innerHTML += 'A.';
-                // ans_paishi_area.innerHTML += prepared_answer_img_tag[i];
-                // ans_paishi_area.innerHTML += '</p>';
+                answer_box_div.insertAdjacentHTML("beforeend", 
+                `${before_tag} <div id="ans-paishi-area" class="question-area"><div class="pt-40"> ${i+1}問目 </div> <div class="paishi">${question_paishi_tag_string} </div></div><div id="ans-answer-area" class="question-area"><div class="pt-40">答え</div><div class="paishi pb-30"> ${prepared_answer_img_tag[i]} </div></div>${after_tag}`);
             }
             console.log(prepared_question_count);
         }
