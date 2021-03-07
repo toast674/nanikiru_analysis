@@ -206,18 +206,14 @@
         });
 
         $('#restart-btn').on('click', function () {
-            prepareFlash();
-            prepared_question_count = document.getElementById('question_count').value;
-            prepared_question_second = document.getElementById('question_second').value;
-            startCount();
-            $('.restart-btn-div').hide();
-            $('.answer-btn-div').hide();
-            $('#answer-box-div').hide();
+            location.reload();
         });
 
         $('#answer-btn').on('click', function () {
             $('#answer-box-div').show();
             showAnswer();
+            // 問題確認用
+            //showAllQuestion();
         });
 
         // カウントダウン
@@ -237,6 +233,26 @@
                 }
             }
             let timeId = setInterval(getCount, 1000);
+        }
+
+        function showAllQuestion() {
+            let answer_box_div = document.getElementById("answer-box-div");
+            answer_box_div.innerHTML = "";
+
+            for(let i = 0; i < prepared_paishi_img_tag_all.length; i++) {
+                let question_paishi_tag_string = "";
+                for(let j = 0; j < 14; j++) {
+                    question_paishi_tag_string += prepared_paishi_img_tag_all[i][j];
+                }
+                console.log(question_paishi_tag_string);
+
+            let before_tag = '<div class="card fade-in-left"><div class="problem">';
+            let after_tag = '</div></div>';
+
+            answer_box_div.insertAdjacentHTML("beforeend", 
+            `${before_tag} <div id="ans-paishi-area" class="question-area"><div class="pt-40"> ${i+1}問目 </div> <div class="paishi">${question_paishi_tag_string} </div></div><div id="ans-answer-area" class="question-area"><div class="pt-40">答え</div><div class="paishi pb-30"> ${prepared_answer_img_tag[i]} </div></div>${after_tag}`);
+            }
+
         }
 
         function showAnswer() {
