@@ -36,6 +36,9 @@
                 <div class="action-choices">
                     <button type="button" class="trans-btn" onclick="location.href='flash'" onfocus="this.blur();"><span class="btn-shine">フラッシュ何切る</span></button>
                 </div>
+                <div class="action-choices">
+                    <button type="button" class="trans-btn" onclick='location.href="https://www.youtube.com/channel/UC6aKBxBrb5BRC7T_ePZvbnQ"' onfocus="this.blur();"><span class="btn-shine">YouTube</span></button>
+                </div>
             </div>
         </div>
         @include('part.footer')

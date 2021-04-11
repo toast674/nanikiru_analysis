@@ -685,3 +685,7 @@ body {
 .pt-40 {
     padding-top: 40px !important;
 }
+
+#mizukuma_logo img {
+    width: 30%;
+}

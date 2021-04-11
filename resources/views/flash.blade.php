@@ -28,7 +28,7 @@
 </head>
 
 <body class="nanikiru">
-    @include('part.header')
+    @include('part.flash_header')
     <div class="container">
         <form method="POST" name="flash">
             <div class="rule">
@@ -50,29 +50,19 @@
                 </div>
             </div>
 
-            <div class="font_24px">
+            <div class="font_24px" class="question_count_div">
                 <label>
                     問題数
                 </label>
                 <select name="question_count" id="question_count" class="black-text" class="font_24px">
-                    <option value="2" class="black-text">2</option>
                     <option value="3" class="black-text">3</option>
-                    <option value="4" class="black-text">4</option>
                     <option value="5" class="black-text">5</option>
-                    <option value="6" class="black-text">6</option>
-                    <option value="7" class="black-text">7</option>
-                    <option value="8" class="black-text">8</option>
-                    <option value="9" class="black-text">9</option>
                     <option value="10" class="black-text">10</option>
-                    <option value="11" class="black-text">11</option>
-                    <option value="12" class="black-text">12</option>
-                    <option value="13" class="black-text">13</option>
-                    <option value="14" class="black-text">14</option>
                     <option value="15" class="black-text">15</option>
                 </select>
                 問
             </div>
-            <div class="font_24px">
+            <div class="font_24px" class="question_second_div">
                 <label>
                     表示間隔
                 </label>
@@ -81,9 +71,7 @@
                     <option value="1" class="black-text">1</option>
                     <option value="1.5" class="black-text">1.5</option>
                     <option value="2" class="black-text">2</option>
-                    <option value="2.5" class="black-text">2.5</option>
                     <option value="3" class="black-text">3</option>
-                    <option value="4" class="black-text">4</option>
                     <option value="5" class="black-text">5</option>
                 </select>
                 秒
@@ -96,7 +84,7 @@
                             onfocus="this.blur();">
                     </div>
                     <div class="btn-shine restart-btn-div">
-                        <input id="restart-btn" class="trans-btn pointer" type="button" value="再スタート"
+                        <input id="restart-btn" class="trans-btn pointer" type="button" value="スタートに戻る"
                             onfocus="this.blur();">
                     </div>
                 </label>
@@ -364,6 +352,8 @@
                     box.innerHTML = "終了！";
                     $('.restart-btn-div').show();
                     $('.answer-btn-div').show();
+                    $('.question_second_div').hide();
+                    $('.question_count_div').hide();
                     clearInterval(id);
                 }
             }
