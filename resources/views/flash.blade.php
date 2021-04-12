@@ -32,7 +32,12 @@
     <div class="container">
         <form method="POST" name="flash">
             <div class="rule">
-                <p class="font_24px">東一局　西家 6巡目　ドラ<img id="dora" src="{{ secure_asset("/tile_images/ji1.png") }}"></p>
+                @if(app('env')=='local')
+                    <p class="font_24px">東一局　西家 6巡目　ドラ<img id="dora" src="{{ asset("/tile_images/ji1.png") }}"></p>
+                @endif
+                @if(app('env')=='production')
+                    <p class="font_24px">東一局　西家 6巡目　ドラ<img id="dora" src="{{ secure_asset("/tile_images/ji1.png") }}"></p>
+                @endif
             </div>
             <div class="card-outer">
                 @csrf
@@ -472,43 +477,84 @@
         }
 
         function createPaiImage (pai) {
-            if(pai == '1m') return "<img src={{ secure_asset('/tile_images/man1.png') }} />";
-            if(pai == '2m') return "<img src={{ secure_asset('/tile_images/man2.png') }} />";
-            if(pai == '3m') return "<img src={{ secure_asset('/tile_images/man3.png') }} />";
-            if(pai == '4m') return "<img src={{ secure_asset('/tile_images/man4.png') }} />";
-            if(pai == '5m') return "<img src={{ secure_asset('/tile_images/man5.png') }} />";
-            if(pai == '6m') return "<img src={{ secure_asset('/tile_images/man6.png') }} />";
-            if(pai == '7m') return "<img src={{ secure_asset('/tile_images/man7.png') }} />";
-            if(pai == '8m') return "<img src={{ secure_asset('/tile_images/man8.png') }} />";
-            if(pai == '9m') return "<img src={{ secure_asset('/tile_images/man9.png') }} />";
-            if(pai == '1p') return "<img src={{ secure_asset('/tile_images/pin1.png') }} />";
-            if(pai == '2p') return "<img src={{ secure_asset('/tile_images/pin2.png') }} />";
-            if(pai == '3p') return "<img src={{ secure_asset('/tile_images/pin3.png') }} />";
-            if(pai == '4p') return "<img src={{ secure_asset('/tile_images/pin4.png') }} />";
-            if(pai == '5p') return "<img src={{ secure_asset('/tile_images/pin5.png') }} />";
-            if(pai == '6p') return "<img src={{ secure_asset('/tile_images/pin6.png') }} />";
-            if(pai == '7p') return "<img src={{ secure_asset('/tile_images/pin7.png') }} />";
-            if(pai == '8p') return "<img src={{ secure_asset('/tile_images/pin8.png') }} />";
-            if(pai == '9p') return "<img src={{ secure_asset('/tile_images/pin9.png') }} />";
-            if(pai == '1s') return "<img src={{ secure_asset('/tile_images/sou1.png') }} />";
-            if(pai == '2s') return "<img src={{ secure_asset('/tile_images/sou2.png') }} />";
-            if(pai == '3s') return "<img src={{ secure_asset('/tile_images/sou3.png') }} />";
-            if(pai == '4s') return "<img src={{ secure_asset('/tile_images/sou4.png') }} />";
-            if(pai == '5s') return "<img src={{ secure_asset('/tile_images/sou5.png') }} />";
-            if(pai == '6s') return "<img src={{ secure_asset('/tile_images/sou6.png') }} />";
-            if(pai == '7s') return "<img src={{ secure_asset('/tile_images/sou7.png') }} />";
-            if(pai == '8s') return "<img src={{ secure_asset('/tile_images/sou8.png') }} />";
-            if(pai == '9s') return "<img src={{ secure_asset('/tile_images/sou9.png') }} />";
-            if(pai == '1z') return "<img src={{ secure_asset('/tile_images/ji1.png') }} />";
-            if(pai == '2z') return "<img src={{ secure_asset('/tile_images/ji2.png') }} />";
-            if(pai == '3z') return "<img src={{ secure_asset('/tile_images/ji3.png') }} />";
-            if(pai == '4z') return "<img src={{ secure_asset('/tile_images/ji4.png') }} />";
-            if(pai == '5z') return "<img src={{ secure_asset('/tile_images/ji5.png') }} />";
-            if(pai == '6z') return "<img src={{ secure_asset('/tile_images/ji6.png') }} />";
-            if(pai == '7z') return "<img src={{ secure_asset('/tile_images/ji7.png') }} />";
-            if(pai == 'r5m') return "<img src={{ secure_asset('/tile_images/aka5man.png') }} />";
-            if(pai == 'r5p') return "<img src={{ secure_asset('/tile_images/aka5pin.png') }} />";
-            if(pai == 'r5s') return "<img src={{ secure_asset('/tile_images/aka5sou.png') }} />";
+            @if(app('env')=='local')
+                if(pai == '1m') return "<img src={{ asset('/tile_images/man1.png') }} />";
+                if(pai == '2m') return "<img src={{ asset('/tile_images/man2.png') }} />";
+                if(pai == '3m') return "<img src={{ asset('/tile_images/man3.png') }} />";
+                if(pai == '4m') return "<img src={{ asset('/tile_images/man4.png') }} />";
+                if(pai == '5m') return "<img src={{ asset('/tile_images/man5.png') }} />";
+                if(pai == '6m') return "<img src={{ asset('/tile_images/man6.png') }} />";
+                if(pai == '7m') return "<img src={{ asset('/tile_images/man7.png') }} />";
+                if(pai == '8m') return "<img src={{ asset('/tile_images/man8.png') }} />";
+                if(pai == '9m') return "<img src={{ asset('/tile_images/man9.png') }} />";
+                if(pai == '1p') return "<img src={{ asset('/tile_images/pin1.png') }} />";
+                if(pai == '2p') return "<img src={{ asset('/tile_images/pin2.png') }} />";
+                if(pai == '3p') return "<img src={{ asset('/tile_images/pin3.png') }} />";
+                if(pai == '4p') return "<img src={{ asset('/tile_images/pin4.png') }} />";
+                if(pai == '5p') return "<img src={{ asset('/tile_images/pin5.png') }} />";
+                if(pai == '6p') return "<img src={{ asset('/tile_images/pin6.png') }} />";
+                if(pai == '7p') return "<img src={{ asset('/tile_images/pin7.png') }} />";
+                if(pai == '8p') return "<img src={{ asset('/tile_images/pin8.png') }} />";
+                if(pai == '9p') return "<img src={{ asset('/tile_images/pin9.png') }} />";
+                if(pai == '1s') return "<img src={{ asset('/tile_images/sou1.png') }} />";
+                if(pai == '2s') return "<img src={{ asset('/tile_images/sou2.png') }} />";
+                if(pai == '3s') return "<img src={{ asset('/tile_images/sou3.png') }} />";
+                if(pai == '4s') return "<img src={{ asset('/tile_images/sou4.png') }} />";
+                if(pai == '5s') return "<img src={{ asset('/tile_images/sou5.png') }} />";
+                if(pai == '6s') return "<img src={{ asset('/tile_images/sou6.png') }} />";
+                if(pai == '7s') return "<img src={{ asset('/tile_images/sou7.png') }} />";
+                if(pai == '8s') return "<img src={{ asset('/tile_images/sou8.png') }} />";
+                if(pai == '9s') return "<img src={{ asset('/tile_images/sou9.png') }} />";
+                if(pai == '1z') return "<img src={{ asset('/tile_images/ji1.png') }} />";
+                if(pai == '2z') return "<img src={{ asset('/tile_images/ji2.png') }} />";
+                if(pai == '3z') return "<img src={{ asset('/tile_images/ji3.png') }} />";
+                if(pai == '4z') return "<img src={{ asset('/tile_images/ji4.png') }} />";
+                if(pai == '5z') return "<img src={{ asset('/tile_images/ji5.png') }} />";
+                if(pai == '6z') return "<img src={{ asset('/tile_images/ji6.png') }} />";
+                if(pai == '7z') return "<img src={{ asset('/tile_images/ji7.png') }} />";
+                if(pai == 'r5m') return "<img src={{ asset('/tile_images/aka5man.png') }} />";
+                if(pai == 'r5p') return "<img src={{ asset('/tile_images/aka5pin.png') }} />";
+                if(pai == 'r5s') return "<img src={{ asset('/tile_images/aka5sou.png') }} />";
+            @endif
+            @if(app('env')=='prodaction')
+                if(pai == '1m') return "<img src={{ secure_asset('/tile_images/man1.png') }} />";
+                if(pai == '2m') return "<img src={{ secure_asset('/tile_images/man2.png') }} />";
+                if(pai == '3m') return "<img src={{ secure_asset('/tile_images/man3.png') }} />";
+                if(pai == '4m') return "<img src={{ secure_asset('/tile_images/man4.png') }} />";
+                if(pai == '5m') return "<img src={{ secure_asset('/tile_images/man5.png') }} />";
+                if(pai == '6m') return "<img src={{ secure_asset('/tile_images/man6.png') }} />";
+                if(pai == '7m') return "<img src={{ secure_asset('/tile_images/man7.png') }} />";
+                if(pai == '8m') return "<img src={{ secure_asset('/tile_images/man8.png') }} />";
+                if(pai == '9m') return "<img src={{ secure_asset('/tile_images/man9.png') }} />";
+                if(pai == '1p') return "<img src={{ secure_asset('/tile_images/pin1.png') }} />";
+                if(pai == '2p') return "<img src={{ secure_asset('/tile_images/pin2.png') }} />";
+                if(pai == '3p') return "<img src={{ secure_asset('/tile_images/pin3.png') }} />";
+                if(pai == '4p') return "<img src={{ secure_asset('/tile_images/pin4.png') }} />";
+                if(pai == '5p') return "<img src={{ secure_asset('/tile_images/pin5.png') }} />";
+                if(pai == '6p') return "<img src={{ secure_asset('/tile_images/pin6.png') }} />";
+                if(pai == '7p') return "<img src={{ secure_asset('/tile_images/pin7.png') }} />";
+                if(pai == '8p') return "<img src={{ secure_asset('/tile_images/pin8.png') }} />";
+                if(pai == '9p') return "<img src={{ secure_asset('/tile_images/pin9.png') }} />";
+                if(pai == '1s') return "<img src={{ secure_asset('/tile_images/sou1.png') }} />";
+                if(pai == '2s') return "<img src={{ secure_asset('/tile_images/sou2.png') }} />";
+                if(pai == '3s') return "<img src={{ secure_asset('/tile_images/sou3.png') }} />";
+                if(pai == '4s') return "<img src={{ secure_asset('/tile_images/sou4.png') }} />";
+                if(pai == '5s') return "<img src={{ secure_asset('/tile_images/sou5.png') }} />";
+                if(pai == '6s') return "<img src={{ secure_asset('/tile_images/sou6.png') }} />";
+                if(pai == '7s') return "<img src={{ secure_asset('/tile_images/sou7.png') }} />";
+                if(pai == '8s') return "<img src={{ secure_asset('/tile_images/sou8.png') }} />";
+                if(pai == '9s') return "<img src={{ secure_asset('/tile_images/sou9.png') }} />";
+                if(pai == '1z') return "<img src={{ secure_asset('/tile_images/ji1.png') }} />";
+                if(pai == '2z') return "<img src={{ secure_asset('/tile_images/ji2.png') }} />";
+                if(pai == '3z') return "<img src={{ secure_asset('/tile_images/ji3.png') }} />";
+                if(pai == '4z') return "<img src={{ secure_asset('/tile_images/ji4.png') }} />";
+                if(pai == '5z') return "<img src={{ secure_asset('/tile_images/ji5.png') }} />";
+                if(pai == '6z') return "<img src={{ secure_asset('/tile_images/ji6.png') }} />";
+                if(pai == '7z') return "<img src={{ secure_asset('/tile_images/ji7.png') }} />";
+                if(pai == 'r5m') return "<img src={{ secure_asset('/tile_images/aka5man.png') }} />";
+                if(pai == 'r5p') return "<img src={{ secure_asset('/tile_images/aka5pin.png') }} />";
+                if(pai == 'r5s') return "<img src={{ secure_asset('/tile_images/aka5sou.png') }} />";
+            @endif
         }
 
     </script>
