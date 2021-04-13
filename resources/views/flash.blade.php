@@ -28,11 +28,11 @@
 </head>
 
 <body class="nanikiru">
-    @include('part.header')
+    @include('part.flash_header')
     <div class="container">
         <form method="POST" name="flash">
             <div class="rule">
-                <p class="font_24px">東一局　西家 6巡目　ドラ<img id="dora" src="{{ asset("/tile_images/ji1.png") }}"></p>
+                <p class="font_24px">東一局　西家 6巡目　ドラ<img id="dora" src="{{ secure_asset("/tile_images/ji1.png") }}"></p>
             </div>
             <div class="card-outer">
                 @csrf
@@ -50,37 +50,28 @@
                 </div>
             </div>
 
-            <div class="font_24px">
+            <div class="font_24px" class="question_count_div">
                 <label>
                     問題数
                 </label>
                 <select name="question_count" id="question_count" class="black-text" class="font_24px">
-                    <option value="2" class="black-text">2</option>
                     <option value="3" class="black-text">3</option>
-                    <option value="4" class="black-text">4</option>
                     <option value="5" class="black-text">5</option>
-                    <option value="6" class="black-text">6</option>
-                    <option value="7" class="black-text">7</option>
-                    <option value="8" class="black-text">8</option>
-                    <option value="9" class="black-text">9</option>
                     <option value="10" class="black-text">10</option>
-                    <option value="11" class="black-text">11</option>
-                    <option value="12" class="black-text">12</option>
-                    <option value="13" class="black-text">13</option>
-                    <option value="14" class="black-text">14</option>
                     <option value="15" class="black-text">15</option>
                 </select>
                 問
             </div>
-            <div class="font_24px">
+            <div class="font_24px" class="question_second_div">
                 <label>
                     表示間隔
                 </label>
                 <select name="question_second" id="question_second" class="black-text" class="font_24px">
+                    <option value="0.5" class="black-text">0.5</option>
                     <option value="1" class="black-text">1</option>
+                    <option value="1.5" class="black-text">1.5</option>
                     <option value="2" class="black-text">2</option>
                     <option value="3" class="black-text">3</option>
-                    <option value="4" class="black-text">4</option>
                     <option value="5" class="black-text">5</option>
                 </select>
                 秒
@@ -88,11 +79,30 @@
 
             <div class="action-choices">
                 <label for="start-btn">
-                    <div class="btn-shine">
+                    <div class="btn-shine start-btn-div">
                         <input id="start-btn" class="trans-btn pointer" type="button" value="問題読み込み中" disabled
                             onfocus="this.blur();">
                     </div>
+                    <div class="btn-shine restart-btn-div">
+                        <input id="restart-btn" class="trans-btn pointer" type="button" value="スタートに戻る"
+                            onfocus="this.blur();">
+                    </div>
                 </label>
+            </div>
+
+            <div>
+                <div class="btn-shine answer-btn-div">
+                    <input id="answer-btn" class="trans-btn pointer" type="button" value="答えを見る"
+                        onfocus="this.blur();">
+                </div>
+                <div id="answer-box-div" class="card-outer">
+                    <!-- <div class="card fade-in-left">
+                        <div class="problem">
+                            <div id="ans-paishi-area" class="ans-question-area">
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
             </div>
         </form>
     </div>
@@ -119,6 +129,9 @@
     <script>
 
         $(function(){
+            $('.restart-btn-div').hide();
+            $('.answer-btn-div').hide();
+            
             let images = [
                 '/tile_images/man1.png',
                 '/tile_images/man2.png',
@@ -170,12 +183,26 @@
         var prepared_question_second = "";
         var prepared_paishi_img_tag_all = "";
         var prepared_answer_img_tag = "";
+        var suffled_question_set = {};
 
         $('#start-btn').on('click', function () {
             prepared_question_count = document.getElementById('question_count').value;
             prepared_question_second = document.getElementById('question_second').value;
             startCount();
-        })
+            $('.start-btn-div').hide();
+            $('#answer-box-div').hide();
+        });
+
+        $('#restart-btn').on('click', function () {
+            location.reload();
+        });
+
+        $('#answer-btn').on('click', function () {
+            $('#answer-box-div').show();
+            showAnswer();
+            // 問題確認用
+            //showAllQuestion();
+        });
 
         // カウントダウン
         function startCount() {
@@ -187,13 +214,58 @@
                 paishi_box.innerHTML = "<p>" + timeCount + "</p>";
                 timeCount--;
 
-                // カウントダウン後にフラッシュ起動 各変数の読み込みチェック
+                // カウントダウン後にフラッシュ起動
                 if(timeCount <= 0) {
                     clearInterval(timeId);
                     flashHtml(prepared_paishi_img_tag_all, prepared_answer_img_tag, prepared_question_count, prepared_question_second);
                 }
             }
             let timeId = setInterval(getCount, 1000);
+        }
+
+        function showAllQuestion() {
+            let answer_box_div = document.getElementById("answer-box-div");
+            answer_box_div.innerHTML = "";
+
+            for(let i = 0; i < prepared_paishi_img_tag_all.length; i++) {
+                let question_paishi_tag_string = "";
+                for(let j = 0; j < 14; j++) {
+                    question_paishi_tag_string += prepared_paishi_img_tag_all[i][j];
+                }
+                console.log(question_paishi_tag_string);
+
+            let before_tag = '<div class="card fade-in-left"><div class="problem">';
+            let after_tag = '</div></div>';
+
+            answer_box_div.insertAdjacentHTML("beforeend", 
+            `${before_tag} <div id="ans-paishi-area" class="question-area"><div class="pt-40"> ${i+1}問目 </div> <div class="paishi">${question_paishi_tag_string} </div></div><div id="ans-answer-area" class="question-area"><div class="pt-40">答え</div><div class="paishi pb-30"> ${prepared_answer_img_tag[i]} </div></div>${after_tag}`);
+            }
+
+        }
+
+        function showAnswer() {
+            let answer_box_div = document.getElementById("answer-box-div");
+            answer_box_div.innerHTML = "";
+
+            for(let i = 0; i < prepared_question_count; i++) {
+                // ans_paishi_area.innerHTML += ;
+                // ans_paishi_area.innerHTML += i+1;
+                let question_paishi_tag_string = "";
+                let answer_tag_string = "";
+                prepared_paishi_img_tag_all[i].forEach(el => {
+                    question_paishi_tag_string += el;
+                });
+
+                console.log(question_paishi_tag_string);
+                console.log(i);
+
+                let before_tag = '<div class="card fade-in-left"><div class="problem">';
+                let after_tag = '</div></div>';
+
+                answer_box_div.insertAdjacentHTML("beforeend", 
+                `${before_tag} <div id="ans-paishi-area" class="question-area"><div class="pt-40"> ${i+1}問目 </div> <div class="paishi">${question_paishi_tag_string} </div></div><div id="ans-answer-area" class="question-area"><div class="pt-40">答え</div><div class="paishi pb-30"> ${prepared_answer_img_tag[i]} </div></div>${after_tag}`);
+            }
+            console.log(prepared_question_count);
         }
 
         function prepareFlash() {
@@ -214,17 +286,18 @@
                 question_set["paishi"] = paishi_array;
                 question_set["answer"] = answer_array;
 
-                questionSuffle(question_set);
+                suffled_question_set = questionSuffle(question_set);
+                console.log(suffled_question_set == question_set)
 
                 // 牌姿をimgタグに変換
-                prepared_paishi_img_tag_all = convertImgTag(paishi_array);
-                prepared_answer_img_tag = convertImgTag(answer_array);
+                prepared_paishi_img_tag_all = convertImgTag(suffled_question_set.paishi);
+                prepared_answer_img_tag = convertImgTag(suffled_question_set.answer);
 
                 $('#start-btn').val("スタート");
                 $('#start-btn').prop('disabled', false);
                 
             }).fail(function () {
-                console.log("データ取得エラーです。管理者に連絡してください。");
+                console.log("データ取得エラー");
             });
         }
 
@@ -262,20 +335,25 @@
         // フラッシュさせる
         function flashHtml(paishi_img_tag_all, answer_img_tag, question_count, question_second) {
             let box = document.getElementById("paishi_box");
+            let i = 0;
 
             let showPaishi = function(paishi_img_tag_all) {
 
                 box.innerHTML = "";
-                paishi_img_tag_all[question_count].forEach(el => {
+                paishi_img_tag_all[i].forEach(el => {
                     box.innerHTML += el;
                 })
-                // answer_img_tag[question_count].forEach(el => {
+                // answer_img_tag[i].forEach(el => {
                 //     box.innerHTML += el;
                 // })
-                question_count--;
+                i++;
 
-                if(question_count < 0) {
+                if(i > question_count) {
                     box.innerHTML = "終了！";
+                    $('.restart-btn-div').show();
+                    $('.answer-btn-div').show();
+                    $('.question_second_div').hide();
+                    $('.question_count_div').hide();
                     clearInterval(id);
                 }
             }
@@ -394,43 +472,43 @@
         }
 
         function createPaiImage (pai) {
-            if(pai == '1m') return "<img src={{ asset('/tile_images/man1.png') }} />";
-            if(pai == '2m') return "<img src={{ asset('/tile_images/man2.png') }} />";
-            if(pai == '3m') return "<img src={{ asset('/tile_images/man3.png') }} />";
-            if(pai == '4m') return "<img src={{ asset('/tile_images/man4.png') }} />";
-            if(pai == '5m') return "<img src={{ asset('/tile_images/man5.png') }} />";
-            if(pai == '6m') return "<img src={{ asset('/tile_images/man6.png') }} />";
-            if(pai == '7m') return "<img src={{ asset('/tile_images/man7.png') }} />";
-            if(pai == '8m') return "<img src={{ asset('/tile_images/man8.png') }} />";
-            if(pai == '9m') return "<img src={{ asset('/tile_images/man9.png') }} />";
-            if(pai == '1p') return "<img src={{ asset('/tile_images/pin1.png') }} />";
-            if(pai == '2p') return "<img src={{ asset('/tile_images/pin2.png') }} />";
-            if(pai == '3p') return "<img src={{ asset('/tile_images/pin3.png') }} />";
-            if(pai == '4p') return "<img src={{ asset('/tile_images/pin4.png') }} />";
-            if(pai == '5p') return "<img src={{ asset('/tile_images/pin5.png') }} />";
-            if(pai == '6p') return "<img src={{ asset('/tile_images/pin6.png') }} />";
-            if(pai == '7p') return "<img src={{ asset('/tile_images/pin7.png') }} />";
-            if(pai == '8p') return "<img src={{ asset('/tile_images/pin8.png') }} />";
-            if(pai == '9p') return "<img src={{ asset('/tile_images/pin9.png') }} />";
-            if(pai == '1s') return "<img src={{ asset('/tile_images/sou1.png') }} />";
-            if(pai == '2s') return "<img src={{ asset('/tile_images/sou2.png') }} />";
-            if(pai == '3s') return "<img src={{ asset('/tile_images/sou3.png') }} />";
-            if(pai == '4s') return "<img src={{ asset('/tile_images/sou4.png') }} />";
-            if(pai == '5s') return "<img src={{ asset('/tile_images/sou5.png') }} />";
-            if(pai == '6s') return "<img src={{ asset('/tile_images/sou6.png') }} />";
-            if(pai == '7s') return "<img src={{ asset('/tile_images/sou7.png') }} />";
-            if(pai == '8s') return "<img src={{ asset('/tile_images/sou8.png') }} />";
-            if(pai == '9s') return "<img src={{ asset('/tile_images/sou9.png') }} />";
-            if(pai == '1z') return "<img src={{ asset('/tile_images/ji1.png') }} />";
-            if(pai == '2z') return "<img src={{ asset('/tile_images/ji2.png') }} />";
-            if(pai == '3z') return "<img src={{ asset('/tile_images/ji3.png') }} />";
-            if(pai == '4z') return "<img src={{ asset('/tile_images/ji4.png') }} />";
-            if(pai == '5z') return "<img src={{ asset('/tile_images/ji5.png') }} />";
-            if(pai == '6z') return "<img src={{ asset('/tile_images/ji6.png') }} />";
-            if(pai == '7z') return "<img src={{ asset('/tile_images/ji7.png') }} />";
-            if(pai == 'r5m') return "<img src={{ asset('/tile_images/aka5man.png') }} />";
-            if(pai == 'r5p') return "<img src={{ asset('/tile_images/aka5pin.png') }} />";
-            if(pai == 'r5s') return "<img src={{ asset('/tile_images/aka5sou.png') }} />";
+            if(pai == '1m') return "<img src={{ secure_asset('/tile_images/man1.png') }} />";
+            if(pai == '2m') return "<img src={{ secure_asset('/tile_images/man2.png') }} />";
+            if(pai == '3m') return "<img src={{ secure_asset('/tile_images/man3.png') }} />";
+            if(pai == '4m') return "<img src={{ secure_asset('/tile_images/man4.png') }} />";
+            if(pai == '5m') return "<img src={{ secure_asset('/tile_images/man5.png') }} />";
+            if(pai == '6m') return "<img src={{ secure_asset('/tile_images/man6.png') }} />";
+            if(pai == '7m') return "<img src={{ secure_asset('/tile_images/man7.png') }} />";
+            if(pai == '8m') return "<img src={{ secure_asset('/tile_images/man8.png') }} />";
+            if(pai == '9m') return "<img src={{ secure_asset('/tile_images/man9.png') }} />";
+            if(pai == '1p') return "<img src={{ secure_asset('/tile_images/pin1.png') }} />";
+            if(pai == '2p') return "<img src={{ secure_asset('/tile_images/pin2.png') }} />";
+            if(pai == '3p') return "<img src={{ secure_asset('/tile_images/pin3.png') }} />";
+            if(pai == '4p') return "<img src={{ secure_asset('/tile_images/pin4.png') }} />";
+            if(pai == '5p') return "<img src={{ secure_asset('/tile_images/pin5.png') }} />";
+            if(pai == '6p') return "<img src={{ secure_asset('/tile_images/pin6.png') }} />";
+            if(pai == '7p') return "<img src={{ secure_asset('/tile_images/pin7.png') }} />";
+            if(pai == '8p') return "<img src={{ secure_asset('/tile_images/pin8.png') }} />";
+            if(pai == '9p') return "<img src={{ secure_asset('/tile_images/pin9.png') }} />";
+            if(pai == '1s') return "<img src={{ secure_asset('/tile_images/sou1.png') }} />";
+            if(pai == '2s') return "<img src={{ secure_asset('/tile_images/sou2.png') }} />";
+            if(pai == '3s') return "<img src={{ secure_asset('/tile_images/sou3.png') }} />";
+            if(pai == '4s') return "<img src={{ secure_asset('/tile_images/sou4.png') }} />";
+            if(pai == '5s') return "<img src={{ secure_asset('/tile_images/sou5.png') }} />";
+            if(pai == '6s') return "<img src={{ secure_asset('/tile_images/sou6.png') }} />";
+            if(pai == '7s') return "<img src={{ secure_asset('/tile_images/sou7.png') }} />";
+            if(pai == '8s') return "<img src={{ secure_asset('/tile_images/sou8.png') }} />";
+            if(pai == '9s') return "<img src={{ secure_asset('/tile_images/sou9.png') }} />";
+            if(pai == '1z') return "<img src={{ secure_asset('/tile_images/ji1.png') }} />";
+            if(pai == '2z') return "<img src={{ secure_asset('/tile_images/ji2.png') }} />";
+            if(pai == '3z') return "<img src={{ secure_asset('/tile_images/ji3.png') }} />";
+            if(pai == '4z') return "<img src={{ secure_asset('/tile_images/ji4.png') }} />";
+            if(pai == '5z') return "<img src={{ secure_asset('/tile_images/ji5.png') }} />";
+            if(pai == '6z') return "<img src={{ secure_asset('/tile_images/ji6.png') }} />";
+            if(pai == '7z') return "<img src={{ secure_asset('/tile_images/ji7.png') }} />";
+            if(pai == 'r5m') return "<img src={{ secure_asset('/tile_images/aka5man.png') }} />";
+            if(pai == 'r5p') return "<img src={{ secure_asset('/tile_images/aka5pin.png') }} />";
+            if(pai == 'r5s') return "<img src={{ secure_asset('/tile_images/aka5sou.png') }} />";
         }
 
     </script>

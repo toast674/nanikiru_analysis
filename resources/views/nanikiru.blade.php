@@ -22,7 +22,7 @@
         <link rel="stylesheet" type="text/css" href="{{ secure_asset('css/jquery.notify.css') }}">
     @endif
 
-    @include('part.ga')(env(GA_ENABLE), 'part.ga')
+    @include('part.ga')
     <style>
     </style>
 </head>

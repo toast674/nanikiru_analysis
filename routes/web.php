@@ -15,11 +15,11 @@ Route::get('/', function () {
     return view('top');
 });
 
-Route::get('nanikiru','NanikiruController@index');
-Route::post('nanikiru','NanikiruController@index');
-Route::get('result','NanikiruController@result');
-Route::post('result','NanikiruController@result');
-Route::get('description','NanikiruController@description');
-Route::get('chart','BookChartController@index');
+// Route::get('nanikiru','NanikiruController@index');
+// Route::post('nanikiru','NanikiruController@index');
+// Route::get('result','NanikiruController@result');
+// Route::post('result','NanikiruController@result');
+// Route::get('description','NanikiruController@description');
+// Route::get('chart','BookChartController@index');
 Route::get('flash','FlashController@index');
 Route::get('getFlashPaishi','FlashController@getFlashPaishi');
