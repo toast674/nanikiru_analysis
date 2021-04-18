@@ -516,7 +516,8 @@
                 if(pai == 'r5p') return "<img src={{ asset('/tile_images/aka5pin.png') }} />";
                 if(pai == 'r5s') return "<img src={{ asset('/tile_images/aka5sou.png') }} />";
             @endif
-            @if(app('env')=='prodaction')
+            
+            @if(app('env')=='production')
                 if(pai == '1m') return "<img src={{ secure_asset('/tile_images/man1.png') }} />";
                 if(pai == '2m') return "<img src={{ secure_asset('/tile_images/man2.png') }} />";
                 if(pai == '3m') return "<img src={{ secure_asset('/tile_images/man3.png') }} />";
