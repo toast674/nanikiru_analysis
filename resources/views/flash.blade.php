@@ -188,6 +188,8 @@
         var prepared_question_second = "";
         var prepared_paishi_img_tag_all = "";
         var prepared_answer_img_tag = "";
+        var test_prepared_paishi_img_tag_all = "";
+        var test_prepared_anser_img_tag_all = "";
         var suffled_question_set = {};
 
         $('#start-btn').on('click', function () {
@@ -232,18 +234,17 @@
             let answer_box_div = document.getElementById("answer-box-div");
             answer_box_div.innerHTML = "";
 
-            for(let i = 0; i < prepared_paishi_img_tag_all.length; i++) {
+            for(let i = 0; i < test_prepared_paishi_img_tag_all.length; i++) {
                 let question_paishi_tag_string = "";
                 for(let j = 0; j < 14; j++) {
-                    question_paishi_tag_string += prepared_paishi_img_tag_all[i][j];
+                    question_paishi_tag_string += test_prepared_paishi_img_tag_all[i][j];
                 }
-                console.log(question_paishi_tag_string);
 
             let before_tag = '<div class="card fade-in-left"><div class="problem">';
             let after_tag = '</div></div>';
 
             answer_box_div.insertAdjacentHTML("beforeend", 
-            `${before_tag} <div id="ans-paishi-area" class="question-area"><div class="pt-40"> ${i+1}問目 </div> <div class="paishi">${question_paishi_tag_string} </div></div><div id="ans-answer-area" class="question-area"><div class="pt-40">答え</div><div class="paishi pb-30"> ${prepared_answer_img_tag[i]} </div></div>${after_tag}`);
+            `${before_tag} <div id="ans-paishi-area" class="question-area"><div class="pt-40"> ${i+1}問目 </div> <div class="paishi">${question_paishi_tag_string} </div></div><div id="ans-answer-area" class="question-area"><div class="pt-40">答え</div><div class="paishi pb-30"> ${test_prepared_answer_img_tag[i]} </div></div>${after_tag}`);
             }
 
         }
@@ -261,16 +262,12 @@
                     question_paishi_tag_string += el;
                 });
 
-                console.log(question_paishi_tag_string);
-                console.log(i);
-
                 let before_tag = '<div class="card fade-in-left"><div class="problem">';
                 let after_tag = '</div></div>';
 
                 answer_box_div.insertAdjacentHTML("beforeend", 
                 `${before_tag} <div id="ans-paishi-area" class="question-area"><div class="pt-40"> ${i+1}問目 </div> <div class="paishi">${question_paishi_tag_string} </div></div><div id="ans-answer-area" class="question-area"><div class="pt-40">答え</div><div class="paishi pb-30"> ${prepared_answer_img_tag[i]} </div></div>${after_tag}`);
             }
-            console.log(prepared_question_count);
         }
 
         function prepareFlash() {
@@ -278,25 +275,41 @@
             let answer_array = [];
             let question_set = {};
 
+            // テスト用
+            let base_paishi_array = [];
+            let base_answer_array = [];
+            let base_question_set = {};
+            
+
             $.ajax({
                 type: 'GET',
                 url: 'getFlashPaishi',
                 dataType: 'json',
             }).done(function (data) {
+                console.log(data);
                 // 牌姿をm,p,s,zで記述する配列に変換
                 data.forEach(element => {
+                    console.log(element);
+                    base_paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
+                    base_answer_array.push(convertFromStringToArrayImageUrl(element.answer));
                     paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
                     answer_array.push(convertFromStringToArrayImageUrl(element.answer));
                 });
-                question_set["paishi"] = paishi_array;
-                question_set["answer"] = answer_array;
+                
+                base_question_set.paishi = base_paishi_array;
+                base_question_set.answer = base_answer_array;
+                question_set.paishi = paishi_array;
+                question_set.answer = answer_array;
 
                 suffled_question_set = questionSuffle(question_set);
-                console.log(suffled_question_set == question_set)
 
                 // 牌姿をimgタグに変換
                 prepared_paishi_img_tag_all = convertImgTag(suffled_question_set.paishi);
                 prepared_answer_img_tag = convertImgTag(suffled_question_set.answer);
+
+                // 一覧用
+                test_prepared_paishi_img_tag_all = convertImgTag(base_question_set.paishi);
+                test_prepared_answer_img_tag = convertImgTag(base_question_set.answer);
 
                 $('#start-btn').val("スタート");
                 $('#start-btn').prop('disabled', false);
@@ -307,27 +320,27 @@
         }
 
         function questionSuffle(obj) {
-            paishi_array = obj.paishi;
-            answer_array = obj.answer;
+            let obj_paishi_array = obj.paishi;
+            let obj_answer_array = obj.answer;
 
-            for(let i = paishi_array.length - 1; i > 0; i--){
+            for(let i = obj_paishi_array.length - 1; i > 0; i--){
                 let r = Math.floor(Math.random() * (i + 1));
-                let tmp_p = paishi_array[i];
-                let tmp_a = answer_array[i];
-                paishi_array[i] = paishi_array[r];
-                answer_array[i] = answer_array[r];
-                paishi_array[r] = tmp_p;
-                answer_array[r] = tmp_a;
+                let tmp_p = obj_paishi_array[i];
+                let tmp_a = obj_answer_array[i];
+                obj_paishi_array[i] = obj_paishi_array[r];
+                obj_answer_array[i] = obj_answer_array[r];
+                obj_paishi_array[r] = tmp_p;
+                obj_answer_array[r] = tmp_a;
             }
-            obj.paishi = paishi_array;
-            obj.answer = answer_array;
+            obj.paishi = obj_paishi_array;
+            obj.answer = obj_answer_array;
             return obj;
         }
 
-        function convertImgTag(paishi_array) {
+        function convertImgTag(paishi_arr) {
             let paishi_img_tag_all = [];
 
-            paishi_array.forEach(pai_array => {
+            paishi_arr.forEach(pai_array => {
                 let pai_img_tag_array = [];
                 pai_array.forEach((elem, index)=> {
                     pai_img_tag_array.push(createPaiImage(elem));
