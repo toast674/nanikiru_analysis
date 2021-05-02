@@ -208,7 +208,7 @@
             $('#answer-box-div').show();
             showAnswer();
             // 問題確認用
-            //showAllQuestion();
+            // showAllQuestion();
         });
 
         // カウントダウン
@@ -286,10 +286,8 @@
                 url: 'getFlashPaishi',
                 dataType: 'json',
             }).done(function (data) {
-                console.log(data);
                 // 牌姿をm,p,s,zで記述する配列に変換
                 data.forEach(element => {
-                    console.log(element);
                     base_paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
                     base_answer_array.push(convertFromStringToArrayImageUrl(element.answer));
                     paishi_array.push(convertFromStringToArrayImageUrl(element.paishi));
